@@ -480,7 +480,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 50.635387
+  field of view: 18
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -505,13 +505,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 43.2, y: 14.5, z: 4.64}
+  m_LocalRotation: {x: 0.1334025, y: -0, z: -0, w: 0.9910619}
+  m_LocalPosition: {x: 50.1, y: 19.5, z: -25}
   m_LocalScale: {x: 7.2943773, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 15.333, y: 0, z: 0}
 --- !u!1 &1074001109
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,7 +665,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2027359652}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 41.8958, y: 6.825, z: 23.45}
+  m_LocalPosition: {x: 50.1, y: 6.825, z: 23.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 201072394}
@@ -692,7 +692,6 @@ MonoBehaviour:
   playerControlAnim: {fileID: 201072395}
   leftTurn: 0
   rightTurn: 0
-  isJump: 0
   groundCheck: {fileID: 168794093}
   groundMask:
     serializedVersion: 2

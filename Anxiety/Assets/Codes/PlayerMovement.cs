@@ -74,6 +74,7 @@ public class PlayerMovement : MonoBehaviour
         }
         tempX = x;
         playerControlAnim.SetFloat("WalkSpeed", Mathf.Abs(x * walkSpeed));
+        playerControlAnim.SetFloat("ZWalkSpeed", Mathf.Abs(z * walkSpeed));
         playerControlAnim.SetBool("IsCrouching", isCrouch);
         // Jump
         if (isGround && Input.GetKey(KeyCode.Space))
