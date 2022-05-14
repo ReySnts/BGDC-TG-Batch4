@@ -1,10 +1,17 @@
 using UnityEngine;
 using UnityEngine.Events;
+using Cinemachine;
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Body")]
     public Rigidbody rigidBody = null;
+    public Transform shadow = null;
+    BoxCollider boxCol = null;
+    CapsuleCollider capsCol = null;
     float x = 0f;
     float z = 0f;
+    [Header("Camera")]
+    public CinemachineVirtualCamera cam2D = null;
     [Header("Move Speed")]
     [Range(0f, 20f)] [SerializeField] float walkSpeed = 10f;
     [Range(0f, 20f)] [SerializeField] float jumpForce = 15f;
@@ -19,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
     public Transform groundCheck = null;
     public LayerMask groundMask;
     [SerializeField] bool isGround = false;
-    float groundMaxDist = 0.06f;
+    [SerializeField] float groundMaxDist = 0.06f;
     [Header("Event")]
     public UnityEvent OnLand = null;
     public void Landing()
@@ -30,6 +37,8 @@ public class PlayerMovement : MonoBehaviour
     {
         rigidBody = this.GetComponent<Rigidbody>();
         playerControlAnim = this.GetComponentInChildren<Animator>();
+        boxCol = this.GetComponent<BoxCollider>();
+        capsCol = this.GetComponent<CapsuleCollider>();
     }
     void Update()
     {
@@ -54,22 +63,25 @@ public class PlayerMovement : MonoBehaviour
                 firstRightWalk = true;
             }
         }
+        shadow.localScale = Vector3.one * 0.5f;
+        boxCol.enabled = false;
+        capsCol.enabled = true;
         // Crouch
         if (Input.GetKey(KeyCode.LeftControl))
         {
-            rigidBody.velocity =
-                new Vector3(x * walkSpeed * 0.5f, 0f, z * walkSpeed * 0.5f);
+            rigidBody.velocity = new Vector3(x * walkSpeed * 0.5f, 0f, z * walkSpeed * 0.5f);
+            shadow.localScale = new Vector3(1f, 0.5f, 1f);
+            capsCol.enabled = false;
+            boxCol.enabled = true;
             isCrouch = true;
         }
         // Run
-        else if (Input.GetKey(KeyCode.LeftShift)) 
-            rigidBody.velocity = 
-                new Vector3(x * walkSpeed * 2f, 0f, z * walkSpeed * 2f);
+        else if (Input.GetKey(KeyCode.LeftShift))
+            rigidBody.velocity = new Vector3(x * walkSpeed * 2f, 0f, z * walkSpeed * 2f);
         // Normal
         else
         {
-            rigidBody.velocity =
-                new Vector3(x * walkSpeed, 0f, z * walkSpeed);
+            rigidBody.velocity = new Vector3(x * walkSpeed, 0f, z * walkSpeed);
             isCrouch = false;
         }
         tempX = x;
