@@ -10,8 +10,8 @@ public class LightCursor : MonoBehaviour
     Vector3 mousePos = new Vector3(0f, 0f, 0f);
     Vector3 worldPos = new Vector3(0f, 0f, 0f);
     [Header("Constraint")]
-    public float leftXClamp = 0f;
-    public float rightXClamp = 0f;
+    public float leftXClamp = -164f;
+    public float rightXClamp = -50f;
     public float downYClamp = 0f;
     public float upYClamp = 0f;
     void Update()
@@ -20,8 +20,8 @@ public class LightCursor : MonoBehaviour
         mousePos = Input.mousePosition;
         mousePos.z = z;
         worldPos = mainCam.ScreenToWorldPoint(mousePos);
-        x = Mathf.Clamp(worldPos.x, leftXClamp, rightXClamp); // 10f, 90f
-        y = Mathf.Clamp(worldPos.y, downYClamp, upYClamp); // 12f, 20f
+        x = Mathf.Clamp(worldPos.x, leftXClamp, rightXClamp);
+        y = Mathf.Clamp(worldPos.y, downYClamp, upYClamp);
         transform.position = new Vector3(x, y, z);
     }
 }

@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.Playables;
-public class VCam1 : MonoBehaviour
+public class VCam2 : MonoBehaviour
 {
     [Header("References")]
     public Transform player = null;
     public PlayableDirector playableDirector = null;
     public Cam2D cam2D = null;
     [Header("Values")]
-    public Vector2 xTrigger = new Vector2(0f, -143f);
+    public Vector2 xTrigger = new Vector2(0f, -116f);
     [SerializeField] bool isTimelinePlayed = false;
     [Header("Cursor Position")]
     public LightCursor lightCursor = null;
@@ -16,7 +16,7 @@ public class VCam1 : MonoBehaviour
     {
         lightCursor = FindObjectOfType<LightCursor>();
         cam2D = FindObjectOfType<Cam2D>();
-        xTrigger.x = cam2D.firstXTrigger.x;
+        xTrigger.x = cam2D.secondXTrigger.x;
     }
     void Update()
     {
