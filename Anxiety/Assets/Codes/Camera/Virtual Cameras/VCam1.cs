@@ -38,7 +38,7 @@ public class VCam1 : MonoBehaviour
             playableDirector.Stop();
             cam2D.enabled = true;
             isTimelinePlayed = false;
-            this.enabled = false;
+            enabled = false;
         }
     }
 }
