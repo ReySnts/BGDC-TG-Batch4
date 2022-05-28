@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 public class Cam2D : MonoBehaviour
 {
+    int idx = 0;
     // Init Player Pos: (-164.2, 10.25814, 40)
     public Transform player = null;
     [Header("Timelines")]
@@ -19,7 +21,7 @@ public class Cam2D : MonoBehaviour
     [Header("X Transitions")]
     public Vector2 firstXTrigger = new Vector2(-156f, 0f);
     public Vector2 secondXTrigger = new Vector2(-132f, 0f);
-    public float thirdXTrigger = -113f;
+    public Vector2 thirdXTrigger = new Vector2(-113f, 0f);
     [Header("Cursor Position")]
     public LightCursor lightCursor = null;
     public Vector2 yClamp = new Vector2(9.8f, 13.45f);
@@ -36,12 +38,13 @@ public class Cam2D : MonoBehaviour
         vCam2.enabled = false;
 
         vCam3 = FindObjectOfType<VCam3>();
+        thirdXTrigger.y = vCam3.xTrigger.y;
         vCam3.enabled = false;
     }
     void Update()
     {
-        lightCursor.downYClamp = yClamp.x;
-        lightCursor.upYClamp = yClamp.y;
+        lightCursor.downYClamp = player.position.y - 10.25814f + yClamp.x;
+        lightCursor.upYClamp = player.position.y + yClamp.y - 10.25814f;
 
         if (!isTimelinePlayed)
         {
@@ -82,7 +85,7 @@ public class Cam2D : MonoBehaviour
         if (!isTimeline3Played)
         {
             vCam3.enabled = false;
-            if (player.position.x >= thirdXTrigger)
+            if (player.position.x >= thirdXTrigger.x && player.position.x < thirdXTrigger.y)
             {
                 playableDirector3.initialTime = 0.2f;
                 playableDirector3.Play();

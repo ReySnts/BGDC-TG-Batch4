@@ -10,8 +10,6 @@ public class PlayerMovement : MonoBehaviour
     CapsuleCollider capsCol = null;
     float x = 0f;
     float z = 0f;
-    [Header("Camera")]
-    public CinemachineVirtualCamera cam2D = null;
     [Header("Move Speed")]
     [Range(0f, 20f)] [SerializeField] float walkSpeed = 10f;
     [Range(0f, 20f)] [SerializeField] float jumpForce = 15f;
