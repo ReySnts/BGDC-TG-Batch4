@@ -4,100 +4,53 @@ using UnityEngine.Playables;
 public class Cam2D : MonoBehaviour
 {
     int idx = 0;
-    // Init Player Pos: (-164.2, 10.25814, 40)
+    int totalTransitions = 3;
+    int camIdx = 0;
     public Transform player = null;
-    [Header("Timelines")]
-    public PlayableDirector playableDirector = null;
-    public PlayableDirector playableDirector2 = null;
-    public PlayableDirector playableDirector3 = null;
-    [Header("Transition Checks")]
-    [SerializeField] bool isTimelinePlayed = false;
-    [SerializeField] bool isTimeline2Played = false;
-    [SerializeField] bool isTimeline3Played = false;
-    [Header("Virtual Cameras")]
-    public VCam1 vCam1 = null;
-    public VCam2 vCam2 = null;
-    public VCam3 vCam3 = null;
-    [Header("X Transitions")]
-    public Vector2 firstXTrigger = new Vector2(-156f, 0f);
-    public Vector2 secondXTrigger = new Vector2(-132f, 0f);
-    public Vector2 thirdXTrigger = new Vector2(-113f, 0f);
+    [Header("References List")]
+    public List<PlayableDirector> playDirList = new List<PlayableDirector>();
+    public List<VCamHorizontal> vCamHorList = new List<VCamHorizontal>();
+    [Header("Value Arrays")]
+    public Vector2[] xTriggers = null;
+    [SerializeField] bool[] isTimelinePlayed = null;
     [Header("Cursor Position")]
     public LightCursor lightCursor = null;
     public Vector2 yClamp = new Vector2(9.8f, 13.45f);
     void Start()
     {
         lightCursor = FindObjectOfType<LightCursor>();
-
-        vCam1 = FindObjectOfType<VCam1>();
-        firstXTrigger.y = vCam1.xTrigger.y;
-        vCam1.enabled = false;
-
-        vCam2 = FindObjectOfType<VCam2>();
-        secondXTrigger.y = vCam2.xTrigger.y;
-        vCam2.enabled = false;
-
-        vCam3 = FindObjectOfType<VCam3>();
-        thirdXTrigger.y = vCam3.xTrigger.y;
-        vCam3.enabled = false;
+        totalTransitions = vCamHorList.Count;
+        isTimelinePlayed = new bool[totalTransitions];
+        for (idx = 0; idx < totalTransitions; idx++)
+        {
+            isTimelinePlayed[idx] = false;
+            xTriggers[idx].y = vCamHorList[idx].xTrigger.y;
+            vCamHorList[idx].enabled = false;
+        }
     }
     void Update()
     {
         lightCursor.downYClamp = player.position.y - 10.25814f + yClamp.x;
         lightCursor.upYClamp = player.position.y + yClamp.y - 10.25814f;
-
-        if (!isTimelinePlayed)
+        for (camIdx = 0; camIdx < totalTransitions; camIdx++)
         {
-            vCam1.enabled = false;
-            if (player.position.x >= firstXTrigger.x && player.position.x < firstXTrigger.y)
+            if (!isTimelinePlayed[camIdx])
             {
-                playableDirector.initialTime = 0.2f;
-                playableDirector.Play();
-                isTimelinePlayed = true;
+                vCamHorList[camIdx].enabled = false;
+                if (player.position.x >= xTriggers[camIdx].x && player.position.x < xTriggers[camIdx].y)
+                {
+                    playDirList[camIdx].initialTime = 0.2f;
+                    playDirList[camIdx].Play();
+                    isTimelinePlayed[camIdx] = true;
+                }
             }
-        }
-        else if (playableDirector.time >= 2f)
-        {
-            playableDirector.time = 2f;
-            vCam1.enabled = true;
-            isTimelinePlayed = false;
-            enabled = false;
-        }
-
-        if (!isTimeline2Played)
-        {
-            vCam2.enabled = false;
-            if (player.position.x >= secondXTrigger.x && player.position.x < secondXTrigger.y)
+            else if (playDirList[camIdx].time >= 2f)
             {
-                playableDirector2.initialTime = 0.2f;
-                playableDirector2.Play();
-                isTimeline2Played = true;
+                playDirList[camIdx].time = 2f;
+                vCamHorList[camIdx].enabled = true;
+                isTimelinePlayed[camIdx] = false;
+                enabled = false;
             }
-        }
-        else if (playableDirector2.time >= 2f)
-        {
-            playableDirector2.time = 2f;
-            vCam2.enabled = true;
-            isTimeline2Played = false;
-            enabled = false;
-        }
-
-        if (!isTimeline3Played)
-        {
-            vCam3.enabled = false;
-            if (player.position.x >= thirdXTrigger.x && player.position.x < thirdXTrigger.y)
-            {
-                playableDirector3.initialTime = 0.2f;
-                playableDirector3.Play();
-                isTimeline3Played = true;
-            }
-        }
-        else if (playableDirector3.time >= 2f)
-        {
-            playableDirector3.time = 2f;
-            vCam3.enabled = true;
-            isTimeline3Played = false;
-            enabled = false;
         }
     }
 }

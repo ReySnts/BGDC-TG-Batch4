@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.Playables;
-public abstract class VCams : MonoBehaviour
+public abstract class VCamHorizontal : MonoBehaviour
 {
     [Header("References")]
     public Transform player = null;
