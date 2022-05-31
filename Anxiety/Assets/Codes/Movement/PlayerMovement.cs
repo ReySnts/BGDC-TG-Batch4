@@ -11,8 +11,8 @@ public class PlayerMovement : MonoBehaviour
     float x = 0f;
     float z = 0f;
     [Header("Move Speed")]
-    [Range(0f, 20f)] [SerializeField] float walkSpeed = 10f;
-    [Range(0f, 20f)] [SerializeField] float jumpForce = 15f;
+    [Range(0f, 20f)] [SerializeField] float walkSpeed = 4f;
+    [Range(0f, 20f)] public float jumpForce = 7.5f;
     [Header("Animation")]
     public Animator playerControlAnim = null;
     [SerializeField] bool leftTurn = false;
@@ -89,10 +89,10 @@ public class PlayerMovement : MonoBehaviour
         // Jump
         if (isGround && Input.GetKey(KeyCode.Space))
         {
-            rigidBody.velocity += new Vector3(x * walkSpeed * 0.5f, 10f * jumpForce, 0f);
+            rigidBody.velocity += new Vector3(x * walkSpeed, 10f * jumpForce, 0f);
             playerControlAnim.SetBool("IsJumping", true);
         }
-        else if (!isGround) rigidBody.velocity += new Vector3(x * walkSpeed * 0.5f, -jumpForce, 0f);
+        else if (!isGround) rigidBody.velocity += new Vector3(x * walkSpeed, -jumpForce, 0f);
         else if (isGround) OnLand.Invoke();
     }
     void FixedUpdate()

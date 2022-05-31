@@ -1,18 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-public class VCam3Vertical : MonoBehaviour
+public class VCam3Vertical : VCamVerticalUp
 {
-    // Start is called before the first frame update
-    void Start()
+    float y = 0f;
+    public override void SetVCam(float y)
     {
-        
+        yTrigger = y;
     }
-
-    // Update is called once per frame
-    void Update()
+    public override void SetCursor()
     {
-        
+        yClamp.x = 0f;
+        yClamp.y = 12f;
+    }
+    void Awake()
+    {
+        y = vCamVerticalDown.yTrigger = 14f;
+        SetVCam(y);
+        SetCursor();
     }
 }
