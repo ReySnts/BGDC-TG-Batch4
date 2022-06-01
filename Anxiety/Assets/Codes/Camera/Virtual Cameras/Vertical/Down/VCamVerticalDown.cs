@@ -9,10 +9,6 @@ public class VCamVerticalDown : MonoBehaviour
     [Header("Values")]
     public float yTrigger = 0f;
     public bool isTimelinePlayed = false;
-    void Awake()
-    {
-        vCamVerticalUp = FindObjectOfType<VCamVerticalUp>();
-    }
     void Update()
     {
         if (!isTimelinePlayed)

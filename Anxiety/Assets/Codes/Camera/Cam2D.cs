@@ -3,8 +3,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 public class Cam2D : MonoBehaviour
 {
-    int idx = 0;
-    int totalTransitions = 3;
+    int totalTransitions = 4;
     int camIdx = 0;
     public Transform player = null;
     [Header("References List")]
@@ -21,11 +20,11 @@ public class Cam2D : MonoBehaviour
         lightCursor = FindObjectOfType<LightCursor>();
         totalTransitions = vCamHorList.Count;
         isTimelinePlayed = new bool[totalTransitions];
-        for (idx = 0; idx < totalTransitions; idx++)
+        for (camIdx = 0; camIdx < totalTransitions; camIdx++)
         {
-            isTimelinePlayed[idx] = false;
-            xTriggers[idx].y = vCamHorList[idx].xTrigger.y;
-            vCamHorList[idx].enabled = false;
+            isTimelinePlayed[camIdx] = false;
+            xTriggers[camIdx].y = vCamHorList[camIdx].xTrigger.y;
+            vCamHorList[camIdx].enabled = false;
         }
     }
     void Update()
