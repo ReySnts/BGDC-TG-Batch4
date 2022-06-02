@@ -1,15 +1,46 @@
 using UnityEngine;
-public class VCam5Horizontal : VCamHorizontal
+using UnityEngine.Playables;
+public class VCam5Horizontal : MonoBehaviour
 {
-    float x = 0f;
-    public override void SetVCam(float xTriggerX)
+    [Header("References")]
+    public Transform player = null;
+    public PlayableDirector playableDirector = null;
+    public Cam2DToVCam5 cam2DToVCam5 = null;
+    [Header("Value Arrays")]
+    public float xTrigger = 0f;
+    public bool isTimelinePlayed = false;
+    [Header("Cursor Position")]
+    public LightCursor lightCursor = null;
+    public Vector2 yClamp = new Vector2(16f, 25f);
+    void Start()
     {
-        xTrigger = new Vector2(xTriggerX, -82f);
-        yClamp = FindObjectOfType<VCam4Up>().yClamp;
+        cam2DToVCam5.player = player;
+        cam2DToVCam5.playableDirector = playableDirector;
+        cam2DToVCam5.lightCursor = lightCursor = FindObjectOfType<LightCursor>();
+        cam2DToVCam5.xTrigger = xTrigger = -82f;
+        cam2DToVCam5.isTimelinePlayed = isTimelinePlayed = false;
+        cam2DToVCam5.enabled = false;
     }
-    void Awake()
+    void Update()
     {
-        x = cam2D.xTriggers[3].x;
-        SetVCam(x);
+        lightCursor.downYClamp = yClamp.x;
+        lightCursor.upYClamp = yClamp.y;
+        if (!isTimelinePlayed)
+        {
+            cam2DToVCam5.enabled = false;
+            if (player.position.x >= xTrigger)
+            {
+                playableDirector.initialTime = 0.2f;
+                playableDirector.Play();
+                isTimelinePlayed = true;
+            }
+        }
+        else if (playableDirector.time >= 2f)
+        {
+            playableDirector.time = 2f;
+            cam2DToVCam5.enabled = true;
+            isTimelinePlayed = false;
+            enabled = false;
+        }
     }
 }

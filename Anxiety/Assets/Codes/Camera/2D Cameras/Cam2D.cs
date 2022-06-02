@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 public class Cam2D : MonoBehaviour
 {
-    int totalTransitions = 4;
+    int totalTransitions = 3;
     int camIdx = 0;
     public Transform player = null;
     [Header("References List")]
