@@ -6,15 +6,11 @@ public class Cam2DToVCam5 : MonoBehaviour
     public Transform player = null;
     public PlayableDirector playableDirector = null;
     public VCam5Horizontal vCam5Horizontal = null;
-    public LightCursor lightCursor = null;
     [Header("Values")]
     public float xTrigger = 0f;
     public bool isTimelinePlayed = false;
-    Vector2 yClamp = new Vector2(9.8f, 13.45f);
     void Update()
     {
-        lightCursor.downYClamp = player.position.y - 10.25814f + yClamp.x;
-        lightCursor.upYClamp = player.position.y + yClamp.y - 10.25814f;
         if (!isTimelinePlayed)
         {
             playableDirector.time = 2f;

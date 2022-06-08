@@ -9,19 +9,13 @@ public abstract class VCamHorizontal : MonoBehaviour
     [Header("Values")]
     public Vector2 xTrigger = new Vector2(0f, 0f);
     [SerializeField] bool isTimelinePlayed = false;
-    [Header("Cursor Position")]
-    public LightCursor lightCursor = null;
-    public Vector2 yClamp = new Vector2(0f, 0f);
     public abstract void SetVCam(float xTriggerX);
     void Awake()
     {
-        lightCursor = FindObjectOfType<LightCursor>();
         cam2D = FindObjectOfType<Cam2D>();
     }
     void Update()
     {
-        lightCursor.downYClamp = yClamp.x;
-        lightCursor.upYClamp = yClamp.y;
         if (!isTimelinePlayed)
         {
             playableDirector.time = 2f;

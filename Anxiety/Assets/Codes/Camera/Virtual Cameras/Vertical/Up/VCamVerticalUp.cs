@@ -9,21 +9,14 @@ public abstract class VCamVerticalUp : MonoBehaviour
     [Header("Value Arrays")]
     public float yTrigger = 0f;
     public bool isTimelinePlayed = false;
-    [Header("Cursor Position")]
-    public LightCursor lightCursor = null;
-    public Vector2 yClamp = new Vector2(0f, 0f);
     public abstract void SetVCam(float y);
-    public abstract void SetCursor();
     void Start()
     {
-        lightCursor = FindObjectOfType<LightCursor>();
         isTimelinePlayed = false;
         vCamVerticalDown.enabled = false;
     }
     void Update()
     {
-        lightCursor.downYClamp = yClamp.x;
-        lightCursor.upYClamp = yClamp.y;
         if (!isTimelinePlayed)
         {
             vCamVerticalDown.enabled = false;

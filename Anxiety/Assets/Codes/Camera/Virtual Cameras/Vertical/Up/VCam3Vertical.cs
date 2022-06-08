@@ -6,15 +6,9 @@ public class VCam3Vertical : VCamVerticalUp
     {
         yTrigger = y;
     }
-    public override void SetCursor()
-    {
-        yClamp.x = 0f;
-        yClamp.y = 12f;
-    }
     void Awake()
     {
-        y = vCamVerticalDown.yTrigger = 14f;
+        y = vCamVerticalDown.yTrigger = 15.2f;
         SetVCam(y);
-        SetCursor();
     }
 }

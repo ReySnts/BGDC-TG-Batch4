@@ -11,9 +11,9 @@ public class LightCursor : MonoBehaviour
     Vector3 worldPos = new Vector3(0f, 0f, 0f);
     [Header("Constraint")]
     public float leftXClamp = -164f;
-    public float rightXClamp = -50f;
-    public float downYClamp = 0f;
-    public float upYClamp = 0f;
+    public float rightXClamp = -155f;
+    public float downYClamp = 10f;
+    public float upYClamp = 12.8f;
     void Update()
     {
         z = player.position.z + 0.5f;

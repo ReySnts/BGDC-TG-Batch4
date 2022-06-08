@@ -12,12 +12,8 @@ public class Cam2D : MonoBehaviour
     [Header("Value Arrays")]
     public Vector2[] xTriggers = null;
     [SerializeField] bool[] isTimelinePlayed = null;
-    [Header("Cursor Position")]
-    public LightCursor lightCursor = null;
-    public Vector2 yClamp = new Vector2(9.8f, 13.45f);
     void Start()
     {
-        lightCursor = FindObjectOfType<LightCursor>();
         totalTransitions = vCamHorList.Count;
         isTimelinePlayed = new bool[totalTransitions];
         for (camIdx = 0; camIdx < totalTransitions; camIdx++)
@@ -29,8 +25,6 @@ public class Cam2D : MonoBehaviour
     }
     void Update()
     {
-        lightCursor.downYClamp = player.position.y - 10.25814f + yClamp.x;
-        lightCursor.upYClamp = player.position.y + yClamp.y - 10.25814f;
         for (camIdx = 0; camIdx < totalTransitions; camIdx++)
         {
             if (!isTimelinePlayed[camIdx])
