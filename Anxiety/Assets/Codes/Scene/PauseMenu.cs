@@ -1,9 +1,11 @@
 using UnityEngine;
 public class PauseMenu : MonoBehaviour
 {
-    public GameObject pauseMenu = null;
-    public GameObject sounds = null;
     [SerializeField] bool isPaused = false;
+    [Header("References")]
+    public GameObject pauseMenu = null;
+    public GameObject health = null;
+    public GameObject sounds = null;
     void Awake()
     {
         Continue();
@@ -11,12 +13,14 @@ public class PauseMenu : MonoBehaviour
     void Pause()
     {
         pauseMenu.SetActive(true);
+        health.SetActive(false);
         sounds.SetActive(false);
         Time.timeScale = 0f;
     }
     void Continue()
     {
         pauseMenu.SetActive(false);
+        health.SetActive(true);
         sounds.SetActive(true);
         Time.timeScale = 1f;
     }

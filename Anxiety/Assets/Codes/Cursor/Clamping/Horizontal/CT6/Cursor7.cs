@@ -11,5 +11,6 @@ public class Cursor7 : SetCursor
     {
         spotLight.range = 3.2f;
         spotLight.intensity = 1.5f;
+        sphere.localScale = UnityEngine.Vector3.right * spotLight.range * 2f;
     }
 }

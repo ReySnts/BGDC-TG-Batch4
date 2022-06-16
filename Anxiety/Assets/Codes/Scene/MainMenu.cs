@@ -1,14 +1,9 @@
 using UnityEngine;
 public class MainMenu : MonoBehaviour
 {
-    public SceneManagement sceneManagement = null;
-    void Start()
-    {
-        sceneManagement = FindObjectOfType<SceneManagement>();
-    }
     public void Play()
     {
-        sceneManagement.NextScene();
+        SceneManagement.NextScene();
     }
     public void Exit()
     {
