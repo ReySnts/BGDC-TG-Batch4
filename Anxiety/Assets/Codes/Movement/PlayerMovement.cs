@@ -38,12 +38,6 @@ public class PlayerMovement : MonoBehaviour
     public AudioSource landSound = null;
     [Header("Event")]
     public UnityEvent OnLand = null;
-    public void Landing()
-    {
-        landSound.Play();
-        playerControlAnim.SetBool("IsJumping", false);
-        startLand = false;
-    }
     void Start()
     {
         rigidBody = this.GetComponent<Rigidbody>();
@@ -51,9 +45,8 @@ public class PlayerMovement : MonoBehaviour
         boxCol = this.GetComponent<BoxCollider>();
         capsCol = this.GetComponent<CapsuleCollider>();
     }
-    void Update()
+    void Walk()
     {
-        // Walk
         x = Input.GetAxis("Horizontal");
         z = Input.GetAxis("Vertical");
         if (!isPressed && (x != 0f || z != 0f))
@@ -67,7 +60,9 @@ public class PlayerMovement : MonoBehaviour
             runSound.Stop();
             isPressed = false;
         }
-        // Turn Left or Right
+    }
+    void TurnLeftOrRight()
+    {
         if (Input.GetKeyDown(KeyCode.A) && x - tempX < 0f && !leftTurn)
         {
             transform.Rotate(Vector3.up * 180f);
@@ -86,10 +81,15 @@ public class PlayerMovement : MonoBehaviour
                 firstRightWalk = true;
             }
         }
-        // References
+    }
+    void SetBody()
+    {
         shadow.localScale = Vector3.one * 0.5f;
         boxCol.enabled = false;
         capsCol.enabled = true;
+    }
+    void SetMoveMode()
+    {
         // Crouch
         if (Input.GetKey(KeyCode.LeftControl))
         {
@@ -131,14 +131,21 @@ public class PlayerMovement : MonoBehaviour
                 isCrouch = false;
             }
         }
+    }
+    void AdjustTurn()
+    {
         // Turn Left or Right
         tempX = x;
         tempZ = z;
-        // Set Animator
+    }
+    void SetAnimator()
+    {
         playerControlAnim.SetFloat("WalkSpeed", Mathf.Abs(x * walkSpeed));
         playerControlAnim.SetFloat("ZWalkSpeed", Mathf.Abs(z * walkSpeed));
         playerControlAnim.SetBool("IsCrouching", isCrouch);
-        // Jump
+    }
+    void Jump()
+    {
         if (isGround)
         {
             if (Input.GetKey(KeyCode.Space))
@@ -162,6 +169,22 @@ public class PlayerMovement : MonoBehaviour
             crouchSound.Stop();
             rigidBody.velocity += new Vector3(x * walkSpeed, -jumpForce, 0f);
         }
+    }
+    public void Landing()
+    {
+        landSound.Play();
+        playerControlAnim.SetBool("IsJumping", false);
+        startLand = false;
+    }
+    void Update()
+    {
+        Walk();
+        TurnLeftOrRight();
+        SetBody();
+        SetMoveMode();
+        AdjustTurn();
+        SetAnimator();
+        Jump();
     }
     void FixedUpdate()
     {

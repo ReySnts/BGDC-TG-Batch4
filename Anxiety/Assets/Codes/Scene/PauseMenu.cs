@@ -4,9 +4,10 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] bool isPaused = false;
     [Header("References")]
     public GameObject pauseMenu = null;
-    public LightCursor lightCursor = null;
     public GameObject health = null;
     public GameObject sounds = null;
+    public LightCursor lightCursor = null;
+    public AudioSource ambience = null;
     void Awake()
     {
         lightCursor = FindObjectOfType<LightCursor>();
@@ -18,11 +19,13 @@ public class PauseMenu : MonoBehaviour
         lightCursor.enabled = false;
         health.SetActive(false);
         sounds.SetActive(false);
+        ambience.Play();
         Time.timeScale = 0f;
     }
     void Continue()
     {
         pauseMenu.SetActive(false);
+        ambience.Stop();
         lightCursor.enabled = true;
         health.SetActive(true);
         sounds.SetActive(true);
