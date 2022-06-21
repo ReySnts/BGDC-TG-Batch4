@@ -2,11 +2,13 @@ using UnityEngine;
 public class Death : MonoBehaviour
 {
     string colliderName = "Player";
+    bool isTriggered = false;
     void OnTriggerEnter(Collider other)
     {
-        if (other.name == colliderName)
+        if (!isTriggered && other.name == colliderName)
         {
-            SceneManagement.Restart();
+            FindObjectOfType<Fear>().Die();
+            isTriggered = true;
         }
     }
 }

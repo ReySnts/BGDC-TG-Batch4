@@ -1,7 +1,9 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 public class Fear : MonoBehaviour
 {
+    public Animator playerControlAnim = null;
     [Header("Slider")]
     public Slider fearMeter = null;
     [SerializeField] float minFearValue = 0f;
@@ -14,6 +16,16 @@ public class Fear : MonoBehaviour
     {
         fearMeter.value = fearMeter.minValue = minFearValue;
         fearMeter.maxValue = maxFearValue;
+    }
+    IEnumerator GenerateTime()
+    {
+        yield return new WaitForSeconds(16f);
+    }
+    public void Die()
+    {
+        playerControlAnim.SetBool("IsDie", true);
+        StartCoroutine(GenerateTime());
+        SceneManagement.Restart();
     }
     void EffectByLight()
     {
