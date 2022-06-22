@@ -9,9 +9,10 @@ public abstract class VCamVerticalUp : MonoBehaviour
     [Header("Value Arrays")]
     public float yTrigger = 0f;
     public bool isTimelinePlayed = false;
-    public abstract void SetVCam(float y);
+    public abstract float SetVCam();
     void Start()
     {
+        yTrigger = SetVCam();
         isTimelinePlayed = false;
         vCamVerticalDown.enabled = false;
     }

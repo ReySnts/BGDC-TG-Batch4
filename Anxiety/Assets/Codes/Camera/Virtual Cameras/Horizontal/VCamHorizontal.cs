@@ -9,10 +9,11 @@ public abstract class VCamHorizontal : MonoBehaviour
     [Header("Values")]
     public Vector2 xTrigger = new Vector2(0f, 0f);
     [SerializeField] bool isTimelinePlayed = false;
-    public abstract void SetVCam(float xTriggerX);
+    public abstract void SetVCam();
     void Awake()
     {
         cam2D = FindObjectOfType<Cam2D>();
+        SetVCam();
     }
     void Update()
     {

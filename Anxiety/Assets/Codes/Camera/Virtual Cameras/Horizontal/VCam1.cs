@@ -1,14 +1,8 @@
 using UnityEngine;
 public class VCam1 : VCamHorizontal
 {
-    float x = 0f;
-    public override void SetVCam(float xTriggerX)
+    public override void SetVCam()
     {
-        xTrigger = new Vector2(xTriggerX, -143f);
-    }
-    void Awake()
-    {
-        x = cam2D.xTriggers[0].x;
-        SetVCam(x);
+        xTrigger = new Vector2(cam2D.xTriggers[0].x, -143f);
     }
 }
