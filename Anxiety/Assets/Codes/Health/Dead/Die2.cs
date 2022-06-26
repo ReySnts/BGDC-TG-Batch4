@@ -1,7 +1,7 @@
 public class Die2 : Death
 {
-    protected override void SetAnim()
+    protected override void SetRestartTime()
     {
-        playerControlAnim.SetBool("IsDie2", true);
+        restartTime = 3.5f;
     }
 }

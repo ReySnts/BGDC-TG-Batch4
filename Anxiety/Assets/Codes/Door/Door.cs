@@ -3,7 +3,11 @@ using UnityEngine;
 public class Door : MonoBehaviour
 {
     string colliderName = "Player";
+    float waitTime = 1f;
+    [Header("References")]
     public Animator doorControl = null;
+    public BoxCollider doorCollider = null;
+    public GameObject player = null;
     [Header("Checks")]
     [SerializeField] bool isTriggered = false;
     [SerializeField] bool onClick = false;
@@ -16,14 +20,23 @@ public class Door : MonoBehaviour
     {
         if (other.name == colliderName) isTriggered = false;
     }
+    IEnumerator StartScene()
+    {
+        doorCollider.enabled = false;
+        player.SetActive(false);
+        yield return new WaitForSeconds(waitTime);
+        doorCollider.enabled = true;
+        player.SetActive(true);
+    }
     void Start()
     {
+        StartCoroutine(StartScene());
         isOpened = true;
     }
     IEnumerator HoldDoor()
     {
         onClick = true;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(waitTime);
         onClick = false;
     }
     void Update()

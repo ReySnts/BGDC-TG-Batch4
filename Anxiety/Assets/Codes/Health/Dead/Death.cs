@@ -1,19 +1,12 @@
-using System.Collections;
 using UnityEngine;
 public abstract class Death : MonoBehaviour
 {
     Fear fear = null;
+    public AudioSource dieAfterJumpSound = null;
     protected string colliderName = "Player";
+    protected float restartTime = 0f;
     protected bool isTriggered = false;
-    [Header("References")]
-    public Animator playerControlAnim = null;
-    public AudioSource dieSound = null;
-    protected abstract void SetAnim();
-    IEnumerator GenerateTime()
-    {
-        yield return new WaitForSeconds(6f);
-        SceneManagement.Restart();
-    }
+    protected abstract void SetRestartTime();
     void Start()
     {
         fear = FindObjectOfType<Fear>();
@@ -22,10 +15,10 @@ public abstract class Death : MonoBehaviour
     {
         if (!isTriggered && other.name == colliderName)
         {
-            fear.fearMeter.value = fear.maxFearValue;
-            SetAnim();
-            dieSound.Play();
-            StartCoroutine(GenerateTime());
+            SetRestartTime();
+            StartCoroutine(fear.HoldRestart(restartTime));
+            fear.DieAfterJump();
+            dieAfterJumpSound.Play();
             isTriggered = true;
         }
     }
