@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
     float z = 0f;
     [Header("Move Speed")]
     [Range(0f, 20f)] [SerializeField] float walkSpeed = 4f;
-    [Range(0f, 20f)] public float jumpForce = 7.5f;
+    [Range(0f, 20f)] public float jumpForce = 2.5f;
     [Header("Animation")]
     public Animator playerControlAnim = null;
     bool leftTurn = false;
@@ -38,6 +38,8 @@ public class PlayerMovement : MonoBehaviour
     public AudioSource landSound = null;
     [Header("Event")]
     public UnityEvent OnLand = null;
+    public float gravity = -9.81f;
+    public Vector3 velocity;
     void Start()
     {
         rigidBody = this.GetComponent<Rigidbody>();
@@ -150,7 +152,8 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.Space))
             {
-                rigidBody.velocity += new Vector3(x * walkSpeed, 10f * jumpForce, 0f);
+                velocity.y = jumpForce;
+                rigidBody.velocity += new Vector3(x * walkSpeed, velocity.y, 0f);
                 playerControlAnim.SetBool("IsJumping", true);
                 startJump = true;
             }
@@ -167,7 +170,7 @@ public class PlayerMovement : MonoBehaviour
             walkSound.Stop();
             runSound.Stop();
             crouchSound.Stop();
-            rigidBody.velocity += new Vector3(x * walkSpeed, -jumpForce, 0f);
+            playerGravity();
         }
     }
     public void Landing()
@@ -175,6 +178,16 @@ public class PlayerMovement : MonoBehaviour
         landSound.Play();
         playerControlAnim.SetBool("IsJumping", false);
         startLand = false;
+    }
+    void playerGravity()
+    {
+        if (isGround)
+        {
+            velocity.y = -2f;
+        }
+        velocity.y += gravity * Time.deltaTime;
+
+        rigidBody.velocity += new Vector3(x * walkSpeed, velocity.y, 0f);
     }
     void Update()
     {
@@ -185,6 +198,7 @@ public class PlayerMovement : MonoBehaviour
         AdjustTurn();
         SetAnimator();
         Jump();
+
     }
     void FixedUpdate()
     {
@@ -195,7 +209,11 @@ public class PlayerMovement : MonoBehaviour
                 groundMaxDist,
                 groundMask
             )
-        ) isGround = true;
+        )
+        {
+            isGround = true;
+            velocity.y = -2f;
+        }
         else isGround = false;
     }
 }
