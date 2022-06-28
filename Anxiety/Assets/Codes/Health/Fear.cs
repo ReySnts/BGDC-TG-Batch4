@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class Fear : MonoBehaviour
 {
     bool isDie = false;
+    bool isDieAfterJump = false;
+    bool isDieAfterEmptyMeter = false;
     [Header("Slider")]
     public Slider fearMeter = null;
     public float maxFearValue = 100f;
@@ -13,30 +15,79 @@ public class Fear : MonoBehaviour
     [SerializeField] float darkDamage = 5f;
     [SerializeField] float darkDamageCooldown = 1f;
     float lastTimeDamagedByDark = 0f;
-    [Header("References")]
+    [Header("Die Effects")]
     public Animator playerControlAnim = null;
+    public Animator backgroundControl = null;
     public PlayableDirector dieSoundTimeline = null;
+    PlayerMovement playerMovement = null;
+    [Header("Checkpoint")]
+    public GameObject player = null;
+    public Death[] dieTraps = new Death[3];
+    CheckPoint checkPoint = null;
+    void Awake()
+    {
+        playerMovement = FindObjectOfType<PlayerMovement>();
+        checkPoint = FindObjectOfType<CheckPoint>();
+    }
     void Start()
     {
         fearMeter.value = fearMeter.minValue = minFearValue;
         fearMeter.maxValue = maxFearValue;
     }
-    public IEnumerator HoldRestart(float waitTime)
+    void Respawn()
+    {
+        StopAllCoroutines();
+        playerMovement.enabled = true;
+        foreach (Death death in dieTraps) death.isTriggered = false;
+        isDie = checkPoint.isTriggered = false;
+    }
+    IEnumerator HoldRespawn()
+    {
+        yield return new WaitForSeconds(2f);
+        backgroundControl.SetBool("IsFadeOut", false);
+        Respawn();
+    }
+    void SetRespawn()
+    {
+        fearMeter.value = minFearValue;
+        player.transform.position = checkPoint.respawnPoint;
+        if (isDieAfterEmptyMeter)
+        {
+            isDieAfterEmptyMeter = false;
+            playerControlAnim.SetBool("IsDieAfterEmptyMeter", isDieAfterEmptyMeter);
+        }
+        else if (isDieAfterJump)
+        {
+            isDieAfterJump = false;
+            playerControlAnim.SetBool("IsDieAfterJump", isDieAfterJump);
+        }
+    }
+    IEnumerator FadeOut()
+    {
+        yield return new WaitForSeconds(2f);
+        SetRespawn();
+        backgroundControl.SetBool("IsFadeIn", false);
+        backgroundControl.SetBool("IsFadeOut", true);
+        StartCoroutine(HoldRespawn());
+    }
+    public IEnumerator FadeIn(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
-        SceneManagement.Restart();
+        backgroundControl.SetBool("IsFadeIn", true);
+        StartCoroutine(FadeOut());
     }
     void SetDie()
     {
-        FindObjectOfType<PlayerMovement>().enabled = false;
+        playerMovement.enabled = false;
         isDie = true;
     }
     void DieAfterEmptyMeter()
     {
         if (fearMeter.value == maxFearValue)
         {
-            StartCoroutine(HoldRestart(3f));
-            playerControlAnim.SetBool("IsDieAfterEmptyMeter", true);
+            StartCoroutine(FadeIn(3f));
+            isDieAfterEmptyMeter = true;
+            playerControlAnim.SetBool("IsDieAfterEmptyMeter", isDieAfterEmptyMeter);
             dieSoundTimeline.Play();
             SetDie();
         }
@@ -44,7 +95,8 @@ public class Fear : MonoBehaviour
     public void DieAfterJump()
     {
         fearMeter.value = maxFearValue;
-        playerControlAnim.SetBool("IsDieAfterJump", true);
+        isDieAfterJump = true;
+        playerControlAnim.SetBool("IsDieAfterJump", isDieAfterJump);
         SetDie();
     }
     void EffectByLight()

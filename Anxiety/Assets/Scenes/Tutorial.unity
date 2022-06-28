@@ -1413,10 +1413,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fearMeter: {fileID: 2052368707}
-  minFearValue: 0
   maxFearValue: 100
+  minFearValue: 0
   darkDamage: 5
   darkDamageCooldown: 1
+  playerControlAnim: {fileID: 0}
+  backgroundControl: {fileID: 0}
+  dieSoundTimeline: {fileID: 0}
+  player: {fileID: 0}
+  dieTraps:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!4 &657319896
 Transform:
   m_ObjectHideFlags: 0
@@ -3820,7 +3828,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: d921fe1e1211fce4b92567f95466419b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
