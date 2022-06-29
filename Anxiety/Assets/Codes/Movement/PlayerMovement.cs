@@ -179,15 +179,13 @@ public class PlayerMovement : MonoBehaviour
         playerControlAnim.SetBool("IsJumping", false);
         startLand = false;
     }
-    void playerGravity()
-    {
-        if (isGround)
-        {
+    void playerGravity(){
+        if(isGround){
             velocity.y = -2f;
         }
-        velocity.y += gravity * Time.deltaTime;
+        velocity.y += gravity*Time.deltaTime;
 
-        rigidBody.velocity += new Vector3(x * walkSpeed, velocity.y, 0f);
+        rigidBody.velocity += new Vector3(x*walkSpeed, velocity.y, 0f);
     }
     void Update()
     {
@@ -198,7 +196,7 @@ public class PlayerMovement : MonoBehaviour
         AdjustTurn();
         SetAnimator();
         Jump();
-
+        
     }
     void FixedUpdate()
     {
@@ -209,8 +207,7 @@ public class PlayerMovement : MonoBehaviour
                 groundMaxDist,
                 groundMask
             )
-        )
-        {
+        ) {
             isGround = true;
             velocity.y = -2f;
         }
