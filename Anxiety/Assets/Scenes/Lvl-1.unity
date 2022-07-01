@@ -1704,37 +1704,6 @@ MonoBehaviour:
   lightCursor: {fileID: 1669453419}
   spotLight: {fileID: 1259464387}
   sphere: {fileID: 571215759}
---- !u!1 &319957082
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 319957083}
-  m_Layer: 0
-  m_Name: Springs
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &319957083
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 319957082}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -91.99398, y: 11.24, z: 40.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 485534493}
-  m_Father: {fileID: 0}
-  m_RootOrder: 16
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &323057826
 GameObject:
   m_ObjectHideFlags: 0
@@ -2026,8 +1995,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftCursor: {fileID: 2030044535}
   rightCursor: {fileID: 1559116328}
-  isTurn: 0
-  LeftToRight: 0
 --- !u!65 &394947345
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2681,12 +2648,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 485534492}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -91.99398, y: 11.24, z: 40.5}
   m_LocalScale: {x: 2, y: 0.1, z: 2}
   m_Children: []
-  m_Father: {fileID: 319957083}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &485534494
 BoxCollider:
@@ -2763,7 +2730,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerBody: {fileID: 954506293}
-  playerMovement: {fileID: 954506292}
   initForce: 7.5
   triggered: 0
 --- !u!1 &497362125
@@ -3095,8 +3061,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftCursor: {fileID: 1230716278}
   rightCursor: {fileID: 298073972}
-  isTurn: 0
-  LeftToRight: 0
 --- !u!1 &565134791
 GameObject:
   m_ObjectHideFlags: 0
@@ -4338,8 +4302,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftCursor: {fileID: 1388302594}
   rightCursor: {fileID: 314438140}
-  isTurn: 0
-  LeftToRight: 0
 --- !u!65 &796938096
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4496,8 +4458,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftCursor: {fileID: 314438140}
   rightCursor: {fileID: 2086046908}
-  isTurn: 0
-  LeftToRight: 0
 --- !u!65 &813842390
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5467,7 +5427,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkPoints: []
-  isTriggered: 0
   respawnPoint: {x: 0, y: 0, z: 0}
 --- !u!114 &954506292
 MonoBehaviour:
@@ -5742,8 +5701,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftCursor: {fileID: 2086046908}
   rightCursor: {fileID: 323057828}
-  isTurn: 0
-  LeftToRight: 0
 --- !u!65 &974142169
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6938,8 +6895,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftCursor: {fileID: 298073972}
   rightCursor: {fileID: 1388302594}
-  isTurn: 0
-  LeftToRight: 0
 --- !u!65 &1159948414
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7754,8 +7709,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftCursor: {fileID: 377962773}
   rightCursor: {fileID: 419009086}
-  isTurn: 0
-  LeftToRight: 0
 --- !u!65 &1347387158
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8316,8 +8269,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftCursor: {fileID: 323057828}
   rightCursor: {fileID: 807882869}
-  isTurn: 0
-  LeftToRight: 0
 --- !u!65 &1449503281
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8967,7 +8918,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8932478905977209468, guid: 3cb57a55bc433a641abe5e486af30150, type: 3}
       propertyPath: m_RootOrder
-      value: 238
+      value: 236
       objectReference: {fileID: 0}
     - target: {fileID: -8867867888606864338, guid: 3cb57a55bc433a641abe5e486af30150, type: 3}
       propertyPath: m_RootOrder
@@ -9055,7 +9006,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8236422865969933052, guid: 3cb57a55bc433a641abe5e486af30150, type: 3}
       propertyPath: m_RootOrder
-      value: 237
+      value: 238
       objectReference: {fileID: 0}
     - target: {fileID: -8135426111661466322, guid: 3cb57a55bc433a641abe5e486af30150, type: 3}
       propertyPath: m_RootOrder
@@ -9215,7 +9166,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -5937412464474633689, guid: 3cb57a55bc433a641abe5e486af30150, type: 3}
       propertyPath: m_RootOrder
-      value: 236
+      value: 237
       objectReference: {fileID: 0}
     - target: {fileID: -5904509980698594458, guid: 3cb57a55bc433a641abe5e486af30150, type: 3}
       propertyPath: m_RootOrder
@@ -10997,7 +10948,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCam: {fileID: 963194227}
   player: {fileID: 954506295}
-  z: 40
+  z: 40.5
   leftXClamp: -164
   rightXClamp: -155
   downYClamp: 10
@@ -11159,8 +11110,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftCursor: {fileID: 807882869}
   rightCursor: {fileID: 1605796956}
-  isTurn: 0
-  LeftToRight: 0
 --- !u!65 &1700730264
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11398,8 +11347,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftCursor: {fileID: 419009086}
   rightCursor: {fileID: 2030044535}
-  isTurn: 0
-  LeftToRight: 0
 --- !u!65 &1726660409
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12715,8 +12662,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftCursor: {fileID: 1605796956}
   rightCursor: {fileID: 377962773}
-  isTurn: 0
-  LeftToRight: 0
 --- !u!65 &2040570891
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -1,4 +1,4 @@
-public class VerClamp1 : Clamp
+public class VerClamp1 : VerClamp
 {
     protected override void SetCursor()
     {

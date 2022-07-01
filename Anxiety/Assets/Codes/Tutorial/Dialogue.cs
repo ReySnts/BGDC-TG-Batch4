@@ -1,5 +1,4 @@
-using UnityEngine;
-public class Dialogue : Guideline
+public class Dialogue : Sentence
 {
     public string[] characterName = null;
 }

@@ -6,7 +6,7 @@ public class LightCursor : MonoBehaviour
     public Transform player = null;
     float x = 0f;
     float y = 0f;
-    [SerializeField] float z = 40f;
+    [SerializeField] float z = 40.5f;
     Vector3 mousePos = new Vector3(0f, 0f, 0f);
     Vector3 worldPos = new Vector3(0f, 0f, 0f);
     [Header("Constraint")]

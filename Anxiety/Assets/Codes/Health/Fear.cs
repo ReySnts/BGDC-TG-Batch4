@@ -23,11 +23,9 @@ public class Fear : MonoBehaviour
     [Header("Checkpoint")]
     public GameObject player = null;
     public Death[] dieTraps = new Death[3];
-    CheckPoint checkPoint = null;
     void Awake()
     {
         playerMovement = FindObjectOfType<PlayerMovement>();
-        checkPoint = FindObjectOfType<CheckPoint>();
     }
     void Start()
     {
@@ -39,7 +37,7 @@ public class Fear : MonoBehaviour
         StopAllCoroutines();
         playerMovement.enabled = true;
         foreach (Death death in dieTraps) death.isTriggered = false;
-        isDie = checkPoint.isTriggered = false;
+        isDie = false;
     }
     IEnumerator HoldRespawn()
     {
@@ -50,7 +48,7 @@ public class Fear : MonoBehaviour
     void SetRespawn()
     {
         fearMeter.value = minFearValue;
-        player.transform.position = checkPoint.respawnPoint;
+        player.transform.position = FindObjectOfType<CheckPoint>().respawnPoint;
         if (isDieAfterEmptyMeter)
         {
             isDieAfterEmptyMeter = false;

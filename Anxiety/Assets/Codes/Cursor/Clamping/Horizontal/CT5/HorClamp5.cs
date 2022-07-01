@@ -1,4 +1,4 @@
-public class HorClamp5 : Clamp
+public class HorClamp5 : HorClamp
 {
     protected override void SetCursor()
     {
