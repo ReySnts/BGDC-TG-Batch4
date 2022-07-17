@@ -14,6 +14,7 @@ public class Tutorial : MonoBehaviour
     Dialogue dialogue = null;
     PlayerMovement playerMovement = null;
     LightCursor lightCursor = null;
+    Door tutorialDoor = null;
     [Header("Dialogue")]
     Queue<string> dialogueStorage = new Queue<string>();
     bool endDialogue = false;
@@ -73,7 +74,9 @@ public class Tutorial : MonoBehaviour
     }
     void Start()
     {
-        (pauseMenu = FindObjectOfType<PauseMenu>()).enabled = (playerMovement = FindObjectOfType<PlayerMovement>()).enabled = false;
+        (pauseMenu = FindObjectOfType<PauseMenu>()).enabled = 
+            (playerMovement = FindObjectOfType<PlayerMovement>()).enabled = 
+                (tutorialDoor = FindObjectOfType<Door>()).enabled = false;
         SetDialogue();
         SetGuideline();
     }
@@ -104,6 +107,7 @@ public class Tutorial : MonoBehaviour
             case 1:
                 {
                     mushroomGlowingAnimControl.SetBool("IsMushroomGlowing", false);
+                    tutorialDoor.enabled = true;
                     break;
                 }
             default:

@@ -1114,7 +1114,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 213889589}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f527fd8414860644bd525f2e5fcb886, type: 3}
+  m_Script: {fileID: 11500000, guid: ea5062abf654fe24db0daede3669fef6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   doorControl: {fileID: 1612849166}
@@ -1122,7 +1122,7 @@ MonoBehaviour:
   player: {fileID: 954506290}
   isTriggered: 0
   onClick: 0
-  isOpened: 1
+  isOpened: 0
 --- !u!1 &227359127
 GameObject:
   m_ObjectHideFlags: 0
@@ -3434,6 +3434,7 @@ MonoBehaviour:
   playerControlAnim: {fileID: 190527055}
   backgroundControl: {fileID: 497362129}
   dieSoundTimeline: {fileID: 827323870}
+  playerMovement: {fileID: 954506292}
   player: {fileID: 954506290}
   dieTraps:
   - {fileID: 1003131555}
@@ -5587,7 +5588,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 30
+  field of view: 18
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -5612,8 +5613,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -164.2, y: 10.546679, z: 34}
+  m_LocalRotation: {x: 0.13052616, y: 0, z: 0, w: 0.9914449}
+  m_LocalPosition: {x: -149.5, y: 17.12, z: 3.6999998}
   m_LocalScale: {x: 7.2943773, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

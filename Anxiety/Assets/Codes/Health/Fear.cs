@@ -19,14 +19,10 @@ public class Fear : MonoBehaviour
     public Animator playerControlAnim = null;
     public Animator backgroundControl = null;
     public PlayableDirector dieSoundTimeline = null;
-    PlayerMovement playerMovement = null;
+    public PlayerMovement playerMovement = null;
     [Header("Checkpoint")]
     public GameObject player = null;
     public Death[] dieTraps = new Death[3];
-    void Awake()
-    {
-        playerMovement = FindObjectOfType<PlayerMovement>();
-    }
     void Start()
     {
         fearMeter.value = fearMeter.minValue = minFearValue;

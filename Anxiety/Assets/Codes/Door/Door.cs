@@ -2,16 +2,17 @@ using System.Collections;
 using UnityEngine;
 public class Door : MonoBehaviour
 {
-    string colliderName = "Player";
-    float waitTime = 1f;
+    protected string colliderName = "Player";
+    protected string animParamName = "IsOpened";
+    protected float waitTime = 1f;
     [Header("References")]
     public Animator doorControl = null;
     public BoxCollider doorCollider = null;
     public GameObject player = null;
     [Header("Checks")]
-    [SerializeField] bool isTriggered = false;
-    [SerializeField] bool onClick = false;
-    [SerializeField] bool isOpened = true;
+    [SerializeField] protected bool isTriggered = false;
+    [SerializeField] protected bool onClick = false;
+    [SerializeField] protected bool isOpened = true;
     void OnTriggerEnter(Collider other)
     {
         if (other.name == colliderName) isTriggered = true;
@@ -19,19 +20,6 @@ public class Door : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         if (other.name == colliderName) isTriggered = false;
-    }
-    IEnumerator StartScene()
-    {
-        doorCollider.enabled = false;
-        player.SetActive(false);
-        yield return new WaitForSeconds(waitTime);
-        doorCollider.enabled = true;
-        player.SetActive(true);
-    }
-    void Start()
-    {
-        StartCoroutine(StartScene());
-        isOpened = true;
     }
     IEnumerator HoldDoor()
     {
@@ -44,7 +32,7 @@ public class Door : MonoBehaviour
         if (isTriggered && !onClick && Input.GetKeyDown(KeyCode.E))
         {
             StartCoroutine(HoldDoor());
-            doorControl.SetBool("IsOpened", isOpened);
+            doorControl.SetBool(animParamName, isOpened);
             if (isOpened) isOpened = false;
             else isOpened = true;
         }
