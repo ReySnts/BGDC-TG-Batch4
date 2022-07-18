@@ -121,6 +121,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: IsDieAfterJump
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: IsDieAfterEmptyMeter
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6769847722759238068}
   m_Solo: 0
@@ -548,10 +551,10 @@ AnimatorStateMachine:
     m_Position: {x: 40, y: -220, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6769847722759238068}
-    m_Position: {x: 840, y: -270, z: 0}
+    m_Position: {x: 830, y: -70, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 9029469773210485529}
-    m_Position: {x: 850, y: -60, z: 0}
+    m_Position: {x: 830, y: -260, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: 2629180132497154728}
@@ -644,6 +647,9 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 1
     m_ConditionEvent: IsJumping
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: IsDieAfterJump
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 5786372293816290686}
@@ -850,6 +856,9 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 1
     m_ConditionEvent: IsDieAfterEmptyMeter
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: IsDieAfterJump
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 9029469773210485529}

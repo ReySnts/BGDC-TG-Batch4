@@ -23,6 +23,7 @@ public class Fear : MonoBehaviour
     [Header("Checkpoint")]
     public GameObject player = null;
     public Death[] dieTraps = new Death[3];
+    public static bool hasDied = false;
     void Start()
     {
         fearMeter.value = fearMeter.minValue = minFearValue;
@@ -55,6 +56,9 @@ public class Fear : MonoBehaviour
             isDieAfterJump = false;
             playerControlAnim.SetBool("IsDieAfterJump", isDieAfterJump);
         }
+        playerControlAnim.SetBool("IsJumping", false);
+        playerControlAnim.SetBool("IsCrouching", false);
+        hasDied = true;
     }
     IEnumerator FadeOut()
     {

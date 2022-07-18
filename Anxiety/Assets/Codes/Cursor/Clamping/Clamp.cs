@@ -6,8 +6,9 @@ public class Clamp : MonoBehaviour
     public SetCursor leftCursor = null;
     public SetCursor rightCursor = null;
     [Header("Values")]
+    [SerializeField] protected bool clampCheckDie = false;
+    [SerializeField] protected bool toRight = false;
     protected bool isTurn = false;
-    protected bool toRight = false;
     protected virtual void SetCursor() { }
     void Start()
     {
@@ -20,10 +21,11 @@ public class Clamp : MonoBehaviour
             rightCursor.SetClamp();
             rightCursor.SetLight();
         }
-        else
+        else if (!toRight || clampCheckDie)
         {
             leftCursor.SetClamp();
             leftCursor.SetLight();
+            clampCheckDie = false;
         }
     }
     void OnTriggerEnter(Collider other)
