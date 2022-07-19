@@ -42,6 +42,13 @@ public class Fear : MonoBehaviour
         backgroundControl.SetBool("IsFadeOut", false);
         Respawn();
     }
+    void ResetAnimForRespawn()
+    {
+        playerControlAnim.SetFloat("WalkSpeed", 0f);
+        playerControlAnim.SetFloat("ZWalkSpeed", 0f);
+        playerControlAnim.SetBool("IsJumping", false);
+        playerControlAnim.SetBool("IsCrouching", false);
+    }
     void SetRespawn()
     {
         fearMeter.value = minFearValue;
@@ -56,8 +63,7 @@ public class Fear : MonoBehaviour
             isDieAfterJump = false;
             playerControlAnim.SetBool("IsDieAfterJump", isDieAfterJump);
         }
-        playerControlAnim.SetBool("IsJumping", false);
-        playerControlAnim.SetBool("IsCrouching", false);
+        ResetAnimForRespawn();
         hasDied = true;
     }
     IEnumerator FadeOut()

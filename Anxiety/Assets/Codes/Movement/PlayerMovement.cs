@@ -1,11 +1,11 @@
 using UnityEngine;
 using UnityEngine.Events;
-using Cinemachine;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Body")]
+    //public Transform shadow = null;
     public Rigidbody rigidBody = null;
-    public Transform shadow = null;
+    public SpriteRenderer spriteRenderer = null;
     BoxCollider boxCol = null;
     CapsuleCollider capsCol = null;
     float x = 0f;
@@ -15,8 +15,8 @@ public class PlayerMovement : MonoBehaviour
     [Range(0f, 20f)] public float jumpForce = 7.5f;
     [Header("Animation")]
     public Animator playerControlAnim = null;
-    bool leftTurn = false;
-    bool rightTurn = false;
+    public static bool leftTurn = false;
+    public static bool rightTurn = false;
     [SerializeField] bool isCrouch = false;
     [SerializeField] bool isRun = false;
     [SerializeField] bool startJump = false;
@@ -44,6 +44,7 @@ public class PlayerMovement : MonoBehaviour
         playerControlAnim = this.GetComponentInChildren<Animator>();
         boxCol = this.GetComponent<BoxCollider>();
         capsCol = this.GetComponent<CapsuleCollider>();
+        spriteRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
     }
     void Walk()
     {
@@ -84,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
     }
     void SetBody()
     {
-        shadow.localScale = Vector3.one * 0.5f;
+        //shadow.localScale = Vector3.one * 0.5f;
         boxCol.enabled = false;
         capsCol.enabled = true;
     }
@@ -93,8 +94,8 @@ public class PlayerMovement : MonoBehaviour
         // Crouch
         if (Input.GetKey(KeyCode.LeftControl))
         {
+            //shadow.localScale = new Vector3(1f, 0.5f, 1f);
             rigidBody.velocity = new Vector3(x * walkSpeed * 0.5f, 0f, z * walkSpeed * 0.5f);
-            shadow.localScale = new Vector3(1f, 0.5f, 1f);
             capsCol.enabled = false;
             boxCol.enabled = true;
             if (!isCrouch)

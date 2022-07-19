@@ -7,6 +7,7 @@ public class LightCursor : MonoBehaviour
     float x = 0f;
     float y = 0f;
     [SerializeField] float z = 40.5f;
+    [SerializeField] [Range(0.01f, 0.5f)] float zDiff = 0.1875f;
     Vector3 mousePos = new Vector3(0f, 0f, 0f);
     Vector3 worldPos = new Vector3(0f, 0f, 0f);
     [Header("Constraint")]
@@ -16,7 +17,8 @@ public class LightCursor : MonoBehaviour
     public float upYClamp = 12.8f;
     void Update()
     {
-        z = player.position.z + 0.5f;
+        if (PlayerMovement.leftTurn) z = player.position.z + zDiff;
+        else if (PlayerMovement.rightTurn) z = player.position.z - zDiff;
         mousePos = Input.mousePosition;
         mousePos.z = z;
         worldPos = mainCam.ScreenToWorldPoint(mousePos);

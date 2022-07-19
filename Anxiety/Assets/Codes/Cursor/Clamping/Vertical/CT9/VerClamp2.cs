@@ -5,4 +5,8 @@ public class VerClamp2 : VerClamp
         leftCursor = FindObjectOfType<Cursor9>();
         rightCursor = FindObjectOfType<Cursor10>();
     }
+    void Update()
+    {
+        if (Fear.hasDied && CheckPoint.checkPointName == "Moshrum (2)") TurnOnLeftCursor();
+    }
 }

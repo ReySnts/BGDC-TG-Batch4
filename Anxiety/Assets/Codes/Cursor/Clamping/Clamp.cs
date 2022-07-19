@@ -14,7 +14,11 @@ public class Clamp : MonoBehaviour
     {
         SetCursor();
     }
-    public void CheckTurn()
+    void OnTriggerEnter(Collider other)
+    {
+        if (isTurn && other.name == colliderName) isTurn = false;
+    }
+    protected void CheckTurn()
     {
         if (toRight)
         {
@@ -28,8 +32,10 @@ public class Clamp : MonoBehaviour
             clampCheckDie = false;
         }
     }
-    void OnTriggerEnter(Collider other)
+    protected void TurnOnLeftCursor()
     {
-        if (isTurn && other.name == colliderName) isTurn = false;
+        clampCheckDie = true;
+        Fear.hasDied = toRight = false;
+        CheckTurn();
     }
 }

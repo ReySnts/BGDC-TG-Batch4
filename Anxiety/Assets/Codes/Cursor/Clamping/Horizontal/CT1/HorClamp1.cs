@@ -1,4 +1,3 @@
-using UnityEngine;
 public class HorClamp1 : HorClamp
 {
     protected override void SetCursor()
@@ -8,11 +7,6 @@ public class HorClamp1 : HorClamp
     }
     void Update()
     {
-        if (Fear.hasDied && CheckPoint.checkPointName == "Moshrum")
-        {
-            clampCheckDie = true;
-            Fear.hasDied = toRight = false;
-            CheckTurn();
-        }
+        if (Fear.hasDied && CheckPoint.checkPointName == "Moshrum") TurnOnLeftCursor();
     }
 }

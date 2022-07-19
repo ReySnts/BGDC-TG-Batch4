@@ -5,4 +5,8 @@ public class HorClamp9 : HorClamp
         leftCursor = FindObjectOfType<Cursor11>();
         rightCursor = FindObjectOfType<Cursor12>();
     }
+    void Update()
+    {
+        if (Fear.hasDied && CheckPoint.checkPointName == "Moshrum (3)") TurnOnLeftCursor();
+    }
 }
