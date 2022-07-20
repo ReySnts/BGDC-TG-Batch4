@@ -8,9 +8,15 @@ public class PauseMenu : MonoBehaviour
     public GameObject sounds = null;
     public LightCursor lightCursor = null;
     public AudioSource ambience = null;
+    void CheckIfThereIsFearObject()
+    {
+        if (FindObjectOfType<Fear>() != null) Fear.willShowHealth = true;
+        else Fear.willShowHealth = false;
+    }
     void Awake()
     {
         lightCursor = FindObjectOfType<LightCursor>();
+        CheckIfThereIsFearObject();
         Continue();
     }
     void Pause()
@@ -22,12 +28,17 @@ public class PauseMenu : MonoBehaviour
         ambience.Play();
         Time.timeScale = 0f;
     }
+    void CheckIfLevelUseHealth()
+    {
+        if (Tutorial.willShowHealth || Fear.willShowHealth) health.SetActive(true);
+        else health.SetActive(false);
+    }
     void Continue()
     {
         pauseMenu.SetActive(false);
         ambience.Stop();
         lightCursor.enabled = true;
-        health.SetActive(true);
+        CheckIfLevelUseHealth();
         sounds.SetActive(true);
         Time.timeScale = 1f;
     }

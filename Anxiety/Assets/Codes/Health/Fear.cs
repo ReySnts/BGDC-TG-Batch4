@@ -4,6 +4,7 @@ using UnityEngine.Playables;
 using UnityEngine.UI;
 public class Fear : MonoBehaviour
 {
+    public static bool willShowHealth = false;
     bool isDie = false;
     bool isDieAfterJump = false;
     bool isDieAfterEmptyMeter = false;
@@ -49,10 +50,8 @@ public class Fear : MonoBehaviour
         playerControlAnim.SetBool("IsJumping", false);
         playerControlAnim.SetBool("IsCrouching", false);
     }
-    void SetRespawn()
+    void CheckCauseOfDeath()
     {
-        fearMeter.value = minFearValue;
-        player.transform.position = FindObjectOfType<CheckPoint>().respawnPoint;
         if (isDieAfterEmptyMeter)
         {
             isDieAfterEmptyMeter = false;
@@ -63,6 +62,12 @@ public class Fear : MonoBehaviour
             isDieAfterJump = false;
             playerControlAnim.SetBool("IsDieAfterJump", isDieAfterJump);
         }
+    }
+    void SetRespawn()
+    {
+        fearMeter.value = minFearValue;
+        player.transform.position = FindObjectOfType<CheckPoint>().respawnPoint;
+        CheckCauseOfDeath();
         ResetAnimForRespawn();
         hasDied = true;
     }

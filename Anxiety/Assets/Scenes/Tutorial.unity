@@ -2783,9 +2783,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidBody: {fileID: 954506293}
-  shadow: {fileID: 932358851}
+  spriteRenderer: {fileID: 190527056}
   walkSpeed: 4
-  jumpForce: 7.5
+  jumpForce: 5
   playerControlAnim: {fileID: 190527055}
   isCrouch: 0
   isRun: 0
@@ -2817,6 +2817,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  gravity: -9.81
+  velocity: {x: 0, y: 0, z: 0}
 --- !u!54 &954506293
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4448,6 +4450,7 @@ MonoBehaviour:
   mainCam: {fileID: 963194227}
   player: {fileID: 954506295}
   z: 40
+  zDiff: 0.1875
   leftXClamp: -167
   rightXClamp: -160
   downYClamp: 10
@@ -4799,7 +4802,7 @@ MonoBehaviour:
   player: {fileID: 954506290}
   isTriggered: 0
   onClick: 0
-  isOpened: 0
+  isOpened: 1
 --- !u!65 &1804760459
 BoxCollider:
   m_ObjectHideFlags: 0

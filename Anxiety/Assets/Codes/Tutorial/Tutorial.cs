@@ -7,6 +7,7 @@ public class Tutorial : MonoBehaviour
     int dialogueIdx = 0;
     float waitTime = 2f;
     bool onButtonPress = false;
+    public static bool willShowHealth = false;
     [Header("References")]
     public GameObject health = null;
     public GameObject[] roomLights = new GameObject[2];
@@ -72,11 +73,16 @@ public class Tutorial : MonoBehaviour
         foreach (string sentence in guideline.sentences) guidelineStorage.Enqueue(sentence);
         guidance.text = guidelineStorage.Dequeue();
     }
-    void Start()
+    void DisableSomeObjects()
     {
         (pauseMenu = FindObjectOfType<PauseMenu>()).enabled = 
             (playerMovement = FindObjectOfType<PlayerMovement>()).enabled = 
-                (tutorialDoor = FindObjectOfType<Door>()).enabled = false;
+                (tutorialDoor = FindObjectOfType<Door>()).enabled = 
+                    false;
+    }
+    void Start()
+    {
+        DisableSomeObjects();
         SetDialogue();
         SetGuideline();
     }
@@ -86,12 +92,14 @@ public class Tutorial : MonoBehaviour
         {
             case 4:
                 {
+                    willShowHealth = true;
                     health.SetActive(true);
                     fearMeterAnimControl.Play("FearMeterFading");
                     break;
                 }
             case 3:
                 {
+                    willShowHealth = false;
                     health.SetActive(false);
                     foreach (GameObject roomLight in roomLights) roomLight.SetActive(false);
                     lightCursor.enabled = true;

@@ -12,7 +12,9 @@ public class PlayerMovement : MonoBehaviour
     float z = 0f;
     [Header("Move Speed")]
     [Range(0f, 20f)] [SerializeField] float walkSpeed = 4f;
-    [Range(0f, 20f)] public float jumpForce = 7.5f;
+    [Range(0f, 20f)] public float jumpForce = 2.5f;
+    [SerializeField] float gravity = -9.81f;
+    [SerializeField] Vector3 velocity = Vector3.zero;
     [Header("Animation")]
     public Animator playerControlAnim = null;
     public static bool leftTurn = false;
@@ -38,6 +40,20 @@ public class PlayerMovement : MonoBehaviour
     public AudioSource landSound = null;
     [Header("Event")]
     public UnityEvent OnLand = null;
+    void SetCollider()
+    {
+        if (isCrouch)
+        {
+            capsCol.enabled = false;
+            boxCol.enabled = true;
+        }
+        else
+        {
+            //shadow.localScale = Vector3.one * 0.5f;
+            boxCol.enabled = false;
+            capsCol.enabled = true;
+        }
+    }
     void Start()
     {
         rigidBody = this.GetComponent<Rigidbody>();
@@ -45,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
         boxCol = this.GetComponent<BoxCollider>();
         capsCol = this.GetComponent<CapsuleCollider>();
         spriteRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+        SetCollider();
     }
     void Walk()
     {
@@ -83,55 +100,49 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-    void SetBody()
+    void SetCrouch()
     {
-        //shadow.localScale = Vector3.one * 0.5f;
-        boxCol.enabled = false;
-        capsCol.enabled = true;
+        //shadow.localScale = new Vector3(1f, 0.5f, 1f);
+        rigidBody.velocity = new Vector3(x * walkSpeed * 0.5f, 0f, z * walkSpeed * 0.5f);
+        if (!isCrouch)
+        {
+            crouchSound.Play();
+            isCrouch = true;
+        }
+        runSound.Stop();
+    }
+    void SetRun()
+    {
+        rigidBody.velocity = new Vector3(x * walkSpeed * 2f, 0f, z * walkSpeed * 2f);
+        if (!isRun && (x != 0f || z != 0f))
+        {
+            runSound.Play();
+            isRun = true;
+        }
+        walkSound.Stop();
+    }
+    void StopRun()
+    {
+        runSound.Stop();
+        walkSound.Play();
+        isRun = false;
+    }
+    void StopCrouch()
+    {
+        crouchSound.Play();
+        isCrouch = false;
+    }
+    void SetNormal()
+    {
+        rigidBody.velocity = new Vector3(x * walkSpeed, 0f, z * walkSpeed);
+        if (isRun) StopRun();
+        if (isCrouch) StopCrouch();
     }
     void SetMoveMode()
     {
-        // Crouch
-        if (Input.GetKey(KeyCode.LeftControl))
-        {
-            //shadow.localScale = new Vector3(1f, 0.5f, 1f);
-            rigidBody.velocity = new Vector3(x * walkSpeed * 0.5f, 0f, z * walkSpeed * 0.5f);
-            capsCol.enabled = false;
-            boxCol.enabled = true;
-            if (!isCrouch)
-            {
-                crouchSound.Play();
-                isCrouch = true;
-            }
-            runSound.Stop();
-        }
-        // Run
-        else if (Input.GetKey(KeyCode.LeftShift))
-        {
-            rigidBody.velocity = new Vector3(x * walkSpeed * 2f, 0f, z * walkSpeed * 2f);
-            if (!isRun && (x != 0f || z != 0f))
-            {
-                runSound.Play();
-                isRun = true;
-            }
-            walkSound.Stop();
-        }
-        // Normal
-        else
-        {
-            rigidBody.velocity = new Vector3(x * walkSpeed, 0f, z * walkSpeed);
-            if (isRun)
-            {
-                runSound.Stop();
-                walkSound.Play();
-                isRun = false;
-            }
-            if (isCrouch)
-            {
-                crouchSound.Play();
-                isCrouch = false;
-            }
-        }
+        if (Input.GetKey(KeyCode.LeftControl)) SetCrouch();
+        else if (Input.GetKey(KeyCode.LeftShift)) SetRun();
+        else SetNormal();
     }
     void AdjustTurn()
     {
@@ -145,31 +156,41 @@ public class PlayerMovement : MonoBehaviour
         playerControlAnim.SetFloat("ZWalkSpeed", Mathf.Abs(z * walkSpeed));
         playerControlAnim.SetBool("IsCrouching", isCrouch);
     }
+    void StartToJump()
+    {
+        velocity.y = jumpForce;
+        rigidBody.velocity += new Vector3(x * walkSpeed, velocity.y, 0f);
+        playerControlAnim.SetBool("IsJumping", true);
+        startJump = true;
+    }
+    void StartLandAfterJump()
+    {
+        jumpSound.Play();
+        startJump = false;
+        startLand = true;
+    }
+    void SetGravity()
+    {
+        if (isGround) velocity.y = -2f;
+        velocity.y += (gravity * Time.deltaTime);
+        rigidBody.velocity += new Vector3(x * walkSpeed, velocity.y, 0f);
+    }
+    void JumpingOnAir()
+    {
+        walkSound.Stop();
+        runSound.Stop();
+        crouchSound.Stop();
+        SetGravity();
+    }
     void Jump()
     {
         if (isGround)
         {
-            if (Input.GetKey(KeyCode.Space))
-            {
-                rigidBody.velocity += new Vector3(x * walkSpeed, 10f * jumpForce, 0f);
-                playerControlAnim.SetBool("IsJumping", true);
-                startJump = true;
-            }
+            if (Input.GetKey(KeyCode.Space)) StartToJump();
             else if (startLand) OnLand.Invoke();
-            if (startJump)
-            {
-                jumpSound.Play();
-                startJump = false;
-                startLand = true;
-            }
+            if (startJump) StartLandAfterJump();
         }
-        else
-        {
-            walkSound.Stop();
-            runSound.Stop();
-            crouchSound.Stop();
-            rigidBody.velocity += new Vector3(x * walkSpeed, -jumpForce, 0f);
-        }
+        else JumpingOnAir();
     }
     public void Landing()
     {
@@ -181,8 +202,8 @@ public class PlayerMovement : MonoBehaviour
     {
         Walk();
         TurnLeftOrRight();
-        SetBody();
         SetMoveMode();
+        SetCollider();
         AdjustTurn();
         SetAnimator();
         Jump();
@@ -196,7 +217,10 @@ public class PlayerMovement : MonoBehaviour
                 groundMaxDist,
                 groundMask
             )
-        ) isGround = true;
+        ) {
+            isGround = true;
+            velocity.y = -2f;
+        }
         else isGround = false;
     }
 }
