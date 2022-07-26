@@ -34,7 +34,7 @@ public class Fear : MonoBehaviour
     {
         StopAllCoroutines();
         playerMovement.enabled = true;
-        foreach (Death death in dieTraps) death.isTriggered = false;
+        foreach (Death death in dieTraps) if (death != null) death.isTriggered = false;
         isDie = false;
     }
     IEnumerator HoldRespawn()
