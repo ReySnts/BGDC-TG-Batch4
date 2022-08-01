@@ -38,38 +38,35 @@ public class HandWall : MonoBehaviour
     {
         boneAnimControl.SetBool("IsPlayerFelt", isPlayerFelt);
         boneAnimControl.SetFloat("FearValue", fear.fearMeter.value);
+        boneAnimControl.SetBool("HasDoneQTE", Fear.hasDoneQTE);
     }
-    void SetGrab()
+    void Grab()
     {
         if (player.position == handMagnetPosition) hasGrabbedPlayer = true;
         else player.position = Vector3.MoveTowards(player.position, handMagnetPosition, grabSpeed);
-    }
-    void Attack()
-    {
-        if (fear.fearMeter.value < fearValForGrab) fear.fearMeter.value += handDmg;
-        isAttHeld = false;
     }
     IEnumerator HoldAttack()
     {
         isAttHeld = true;
         yield return new WaitForSeconds(waitTime);
-        Attack();
+        if (fear.fearMeter.value < fearValForGrab) fear.fearMeter.value += handDmg;
+        isAttHeld = false;
     }
-    void SetAttack()
+    void Attack()
     {
         if (!isAttHeld) StartCoroutine(HoldAttack());
         if (fear.fearMeter.value >= fearValForGrab)
         {
             playerMovement.enabled = playerMovement.rigidBody.useGravity = false;
-            playerMovement.rigidBody.isKinematic = turnOnMagnet = true;
+            playerMovement.rigidBody.isKinematic = isAttHeld = turnOnMagnet = true;
         }
     }
     void Update()
     {
         if (isPlayerFelt)
         {
-            if (!turnOnMagnet) SetAttack();
-            else if (!hasGrabbedPlayer) SetGrab();
+            if (!turnOnMagnet) Attack();
+            else if (!hasGrabbedPlayer) Grab();
         }
         SetAnim();
     }

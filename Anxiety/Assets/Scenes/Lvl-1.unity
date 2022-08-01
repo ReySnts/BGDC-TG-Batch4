@@ -4225,6 +4225,13 @@ MonoBehaviour:
   minFearValue: 0
   darkDamage: 5
   darkDamageCooldown: 0.5
+  qTEImage: {fileID: 0}
+  qTEFill: {fileID: 0}
+  qTEFillAdd: 0.125
+  qTEFillDiffTime: 0.1
+  qTEFillDiff: -0.01
+  handQTEDmg: 0.5
+  handQTEDmgCooldown: 0.1
   playerControlAnim: {fileID: 190527055}
   backgroundControl: {fileID: 497362129}
   dieSoundTimeline: {fileID: 827323870}
@@ -5678,7 +5685,7 @@ Transform:
   m_GameObject: {fileID: 829945944}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 5, y: -14.8, z: -2.0499992}
-  m_LocalScale: {x: 34.284, y: 1, z: 26.121328}
+  m_LocalScale: {x: 3.7039595, y: 1, z: 26.121328}
   m_Children: []
   m_Father: {fileID: 231579480}
   m_RootOrder: 2

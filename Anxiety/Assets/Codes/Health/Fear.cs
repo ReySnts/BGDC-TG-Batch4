@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -16,11 +17,14 @@ public class Fear : MonoBehaviour
     [SerializeField] float darkDamage = 5f;
     [SerializeField] float darkDamageCooldown = 0.5f;
     [Header("QTE")]
-    public GameObject qTE = null;
+    public GameObject qTEImage = null;
     public Image qTEFill = null;
+    public static bool hasDoneQTE = false;
+    [Range(0f, 1f)] [SerializeField] float qTEFillAdd = 0.125f;
+    [SerializeField] float qTEFillDiffTime = 0.1f;
+    [Range(-1f, 0f)] [SerializeField] float qTEFillDiff = -0.01f;
     [SerializeField] float handQTEDmg = 0.5f;
     [SerializeField] float handQTEDmgCooldown = 0.1f;
-    bool isQTEFilled = false;
     float lastTimeDamaged = 0f;
     float currentTime = 0f;
     [Header("Die Effects")]
@@ -34,9 +38,17 @@ public class Fear : MonoBehaviour
     public static bool hasDied = false;
     void Start()
     {
-        qTE.SetActive(false);
-        qTEFill.fillAmount = fearMeter.value = fearMeter.minValue = minFearValue;
-        fearMeter.maxValue = maxFearValue;
+        try
+        {
+            qTEFill.fillAmount = fearMeter.value = fearMeter.minValue = minFearValue;
+            fearMeter.maxValue = maxFearValue;
+            qTEImage.SetActive(false);
+        }
+        catch
+        {
+            qTEImage = null;
+            qTEFill = null;
+        }
     }
     void Respawn()
     {
@@ -100,14 +112,11 @@ public class Fear : MonoBehaviour
     }
     void DieAfterEmptyMeter()
     {
-        if (fearMeter.value == maxFearValue)
-        {
-            StartCoroutine(FadeIn(3f));
-            isDieAfterEmptyMeter = true;
-            playerControlAnim.SetBool("IsDieAfterEmptyMeter", isDieAfterEmptyMeter);
-            dieSoundTimeline.Play();
-            SetDie();
-        }
+        StartCoroutine(FadeIn(3f));
+        isDieAfterEmptyMeter = true;
+        playerControlAnim.SetBool("IsDieAfterEmptyMeter", isDieAfterEmptyMeter);
+        dieSoundTimeline.Play();
+        SetDie();
     }
     public void DieAfterJump()
     {
@@ -120,38 +129,8 @@ public class Fear : MonoBehaviour
     {
         if (Time.time - lastTimeDamaged < darkDamageCooldown) return;
         lastTimeDamaged = Time.time;
-        if (!HandWall.turnOnMagnet)
-        {
-            if (GetLight.outOfLight) fearMeter.value += darkDamage;
-            else if (fearMeter.value < maxFearValue) fearMeter.value -= darkDamage;
-        }
-    }
-    IEnumerator HoldGrab()
-    {
-        yield return new WaitForSeconds(2f);
-        HandWall.turnOnMagnet = HandWall.hasGrabbedPlayer = false;
-        qTEFill.fillAmount = minFearValue;
-    }
-    void FillHandQTE()
-    {
-        playerMovement.rigidBody.isKinematic = false;
-        playerMovement.enabled = playerMovement.rigidBody.useGravity = true;
-        StartCoroutine(HoldGrab());
-        isQTEFilled = true;
-    }
-    void FillingHandQTE()
-    {
-        if (!isQTEFilled)
-        {
-            if (Input.GetKeyDown(KeyCode.Return)) qTEFill.fillAmount += 0.125f;
-            if (qTEFill.fillAmount == 1f) FillHandQTE();
-            else if (currentTime >= 1f)
-            {
-                qTEFill.fillAmount -= 0.01f;
-                currentTime = 0f;
-            }
-            else currentTime += Time.deltaTime;
-        }
+        if (GetLight.outOfLight) fearMeter.value += darkDamage;
+        else if (fearMeter.value < maxFearValue) fearMeter.value -= darkDamage;
     }
     void EffectByHandQTE()
     {
@@ -159,19 +138,42 @@ public class Fear : MonoBehaviour
         lastTimeDamaged = Time.time;
         fearMeter.value += handQTEDmg;
     }
-    void Update()
+    IEnumerator HoldRelease()
     {
-        if (HandWall.hasGrabbedPlayer)
+        yield return new WaitForSeconds(1f);
+        HandWall.turnOnMagnet = HandWall.hasGrabbedPlayer = hasDoneQTE = false;
+    }
+    void ReleasePlayer()
+    {
+        playerMovement.rigidBody.isKinematic = false;
+        playerMovement.enabled = playerMovement.rigidBody.useGravity = hasDoneQTE = true;
+        qTEFill.fillAmount = 0f;
+        qTEImage.SetActive(false);
+        StartCoroutine(HoldRelease());
+    }
+    void StartQTE()
+    {
+        qTEImage.SetActive(true);
+        if (Input.GetKeyDown(KeyCode.Return)) qTEFill.fillAmount += qTEFillAdd;
+        if (qTEFill.fillAmount == 1f) ReleasePlayer();
+        else if (currentTime >= qTEFillDiffTime)
         {
-            qTE.SetActive(true); //Hehe1
-            EffectByHandQTE();
-            FillingHandQTE();
+            qTEFill.fillAmount += qTEFillDiff;
+            currentTime = 0f;
         }
         else
         {
-            qTE.SetActive(false); //Hehe2
-            EffectByLight();
+            currentTime += Time.deltaTime;
+            EffectByHandQTE();
         }
-        if (!isDie) DieAfterEmptyMeter();
+    }
+    void Update()
+    {
+        if (!HandWall.turnOnMagnet) EffectByLight();
+        else if (HandWall.hasGrabbedPlayer && !hasDoneQTE) StartQTE();
+        if (!isDie && fearMeter.value == maxFearValue)
+        {
+            DieAfterEmptyMeter(); //Jika tidak mati saat tertangkap.
+        }
     }
 }

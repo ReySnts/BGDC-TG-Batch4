@@ -9153,8 +9153,11 @@ MonoBehaviour:
   minFearValue: 0
   darkDamage: 5
   darkDamageCooldown: 0.5
-  qTE: {fileID: 1000352088}
+  qTEImage: {fileID: 1000352088}
   qTEFill: {fileID: 2085970899}
+  qTEFillAdd: 0.125
+  qTEFillDiffTime: 0.1
+  qTEFillDiff: -0.01
   handQTEDmg: 0.5
   handQTEDmgCooldown: 0.1
   playerControlAnim: {fileID: 1508554743}
