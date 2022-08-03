@@ -9,6 +9,7 @@ public class Fear : MonoBehaviour
     bool isDie = false;
     bool isDieAfterJump = false;
     bool isDieAfterEmptyMeter = false;
+    public static bool isDieAfterShock = false;
     [Header("Slider")]
     public Slider fearMeter = null;
     public float maxFearValue = 100f;
@@ -31,6 +32,7 @@ public class Fear : MonoBehaviour
     public Animator playerControlAnim = null;
     public Animator backgroundControl = null;
     public PlayableDirector dieSoundTimeline = null;
+    public AudioSource shockSound = null;
     public PlayerMovement playerMovement = null;
     [Header("Checkpoint")]
     public GameObject player = null;
@@ -110,6 +112,13 @@ public class Fear : MonoBehaviour
         playerMovement.enabled = false;
         isDie = true;
     }
+    public void DieAfterJump()
+    {
+        fearMeter.value = maxFearValue;
+        isDieAfterJump = true;
+        playerControlAnim.SetBool("IsDieAfterJump", isDieAfterJump);
+        SetDie();
+    }
     void DieAfterEmptyMeter()
     {
         StartCoroutine(FadeIn(3f));
@@ -118,27 +127,13 @@ public class Fear : MonoBehaviour
         dieSoundTimeline.Play();
         SetDie();
     }
-    public void DieAfterJump()
-    {
-        fearMeter.value = maxFearValue;
-        isDieAfterJump = true;
-        playerControlAnim.SetBool("IsDieAfterJump", isDieAfterJump);
-        SetDie();
-    }
-    void EffectByLight()
-    {
-        if (Time.time - lastTimeDamaged < darkDamageCooldown) return;
-        lastTimeDamaged = Time.time;
-        if (GetLight.outOfLight) fearMeter.value += darkDamage;
-        else if (fearMeter.value < maxFearValue) fearMeter.value -= darkDamage;
-    }
     void EffectByHandQTE()
     {
         if (Time.time - lastTimeDamaged < handQTEDmgCooldown) return;
         lastTimeDamaged = Time.time;
         fearMeter.value += handQTEDmg;
     }
-    IEnumerator HoldRelease()
+    public static IEnumerator ResetHand()
     {
         yield return new WaitForSeconds(1f);
         HandWall.turnOnMagnet = HandWall.hasGrabbedPlayer = hasDoneQTE = false;
@@ -149,13 +144,20 @@ public class Fear : MonoBehaviour
         playerMovement.enabled = playerMovement.rigidBody.useGravity = hasDoneQTE = true;
         qTEFill.fillAmount = 0f;
         qTEImage.SetActive(false);
-        StartCoroutine(HoldRelease());
+        StartCoroutine(ResetHand());
+    }
+    void DieAfterShock()
+    {
+        isDieAfterShock = hasDoneQTE = isDie = true;
+        playerControlAnim.SetBool("IsDieAfterShock", isDieAfterShock);
+        shockSound.Play();
     }
     void StartQTE()
     {
         qTEImage.SetActive(true);
         if (Input.GetKeyDown(KeyCode.Return)) qTEFill.fillAmount += qTEFillAdd;
-        if (qTEFill.fillAmount == 1f) ReleasePlayer();
+        if (fearMeter.value == maxFearValue) DieAfterShock();
+        else if (qTEFill.fillAmount == 1f) ReleasePlayer();
         else if (currentTime >= qTEFillDiffTime)
         {
             qTEFill.fillAmount += qTEFillDiff;
@@ -167,13 +169,20 @@ public class Fear : MonoBehaviour
             EffectByHandQTE();
         }
     }
+    void EffectByLight()
+    {
+        if (!isDie && fearMeter.value == maxFearValue) DieAfterEmptyMeter();
+        else
+        {
+            if (Time.time - lastTimeDamaged < darkDamageCooldown) return;
+            lastTimeDamaged = Time.time;
+            if (GetLight.outOfLight) fearMeter.value += darkDamage;
+            else if (fearMeter.value < maxFearValue) fearMeter.value -= darkDamage;
+        }
+    }
     void Update()
     {
         if (!HandWall.turnOnMagnet) EffectByLight();
         else if (HandWall.hasGrabbedPlayer && !hasDoneQTE) StartQTE();
-        if (!isDie && fearMeter.value == maxFearValue)
-        {
-            DieAfterEmptyMeter(); //Jika tidak mati saat tertangkap.
-        }
     }
 }

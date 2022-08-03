@@ -9163,6 +9163,7 @@ MonoBehaviour:
   playerControlAnim: {fileID: 1508554743}
   backgroundControl: {fileID: 864316840}
   dieSoundTimeline: {fileID: 734712855}
+  shockSound: {fileID: 1692342327}
   playerMovement: {fileID: 1579503271}
   player: {fileID: 1579503268}
   dieTraps:

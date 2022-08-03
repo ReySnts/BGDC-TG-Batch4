@@ -84,9 +84,8 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A) && x - tempX < 0f && !leftTurn)
         {
             transform.Rotate(Vector3.up * 180f);
-            leftTurn = true;
+            leftTurn = firstRightWalk = true; //Still Error.
             rightTurn = false;
-            firstRightWalk = true;
         }
         else if (Input.GetKeyDown(KeyCode.D) && x - tempX > 0f && !rightTurn)
         {

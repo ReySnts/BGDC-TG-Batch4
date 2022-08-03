@@ -12,6 +12,7 @@ public class HandWall : MonoBehaviour
     string colliderName = "Player";
     bool isPlayerFelt = false;
     bool isAttHeld = false;
+    bool startPulling = false;
     public static bool turnOnMagnet = false;
     public static bool hasGrabbedPlayer = false;
     float waitTime = 1f;
@@ -40,6 +41,23 @@ public class HandWall : MonoBehaviour
         boneAnimControl.SetFloat("FearValue", fear.fearMeter.value);
         boneAnimControl.SetBool("HasDoneQTE", Fear.hasDoneQTE);
     }
+    IEnumerator HoldRestart()
+    {
+        yield return new WaitForSeconds(waitTime);
+        Fear.isDieAfterShock = startPulling = false;
+        SceneManagement.Restart();
+    }
+    void Pull()
+    {
+        handMagnetPosition = handMagnet.position + Vector3.forward * zDiff;
+        player.position = handMagnetPosition;
+        if (!startPulling)
+        {
+            StartCoroutine(HoldRestart());
+            StartCoroutine(Fear.ResetHand());
+            startPulling = true;
+        }
+    }
     void Grab()
     {
         if (player.position == handMagnetPosition) hasGrabbedPlayer = true;
@@ -67,6 +85,7 @@ public class HandWall : MonoBehaviour
         {
             if (!turnOnMagnet) Attack();
             else if (!hasGrabbedPlayer) Grab();
+            else if (Fear.isDieAfterShock) Pull();
         }
         SetAnim();
     }
