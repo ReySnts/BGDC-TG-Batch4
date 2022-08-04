@@ -520,7 +520,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 115954281}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 70c3772ed52514a4db5a5d67686f0f15, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -1304,10 +1304,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fearMeter: {fileID: 2052368707}
-  minFearValue: 0
   maxFearValue: 100
+  minFearValue: 0
   darkDamage: 5
   darkDamageCooldown: 1
+  playerControlAnim: {fileID: 0}
+  backgroundControl: {fileID: 0}
+  dieSoundTimeline: {fileID: 0}
+  player: {fileID: 0}
+  dieTraps:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!4 &657319896
 Transform:
   m_ObjectHideFlags: 0
@@ -2245,6 +2253,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  gravity: -9.81
+  velocity: {x: 0, y: 0, z: 0}
 --- !u!54 &954506293
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2268,7 +2278,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 954506290}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 70c3772ed52514a4db5a5d67686f0f15, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.37

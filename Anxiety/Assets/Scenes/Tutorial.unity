@@ -2659,6 +2659,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  gravity: -9.81
+  velocity: {x: 0, y: 0, z: 0}
 --- !u!54 &954506293
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2682,7 +2684,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 954506290}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 70c3772ed52514a4db5a5d67686f0f15, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.37
@@ -4837,8 +4839,8 @@ MonoBehaviour:
   - Press [Esc] to Skip Dialogue . . .
   - 'Press [W], [A], [S], or [D] to Walk . . .
 
-    Press [Left-Shift] to Run .
-    . .'
+    Press [Left-Shift] to Run . .
+    .'
   - 'Press [Space] to Jump . . .
 
     Press [Left-Ctrl] to Crouch . . .'
@@ -4893,7 +4895,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1926169165}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 70c3772ed52514a4db5a5d67686f0f15, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
