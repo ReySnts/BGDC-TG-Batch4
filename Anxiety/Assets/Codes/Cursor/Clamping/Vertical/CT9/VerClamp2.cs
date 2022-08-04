@@ -7,6 +7,6 @@ public class VerClamp2 : VerClamp
     }
     void Update()
     {
-        if (Fear.hasDied && CheckPoint.checkPointName == "Moshrum (2)") TurnOnLeftCursor();
+        if (Fear.objInstance.hasDied && CheckPoint.checkPointName == "Moshrum (2)") TurnOnLeftCursor();
     }
 }

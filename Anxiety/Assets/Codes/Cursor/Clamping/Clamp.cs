@@ -35,7 +35,7 @@ public class Clamp : MonoBehaviour
     protected void TurnOnLeftCursor()
     {
         clampCheckDie = true;
-        Fear.hasDied = toRight = false;
+        Fear.objInstance.hasDied = toRight = false;
         CheckTurn();
     }
 }

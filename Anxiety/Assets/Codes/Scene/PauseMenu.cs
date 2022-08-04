@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] bool isPaused = false;
@@ -10,14 +11,19 @@ public class PauseMenu : MonoBehaviour
     public AudioSource ambience = null;
     void CheckIfThereIsFearObject()
     {
-        if (FindObjectOfType<Fear>() != null) Fear.willShowHealth = true;
+        if (Fear.objInstance != null) Fear.willShowHealth = true;
         else Fear.willShowHealth = false;
     }
-    void Awake()
+    IEnumerator HoldStart()
     {
+        yield return new WaitForEndOfFrame();
         lightCursor = FindObjectOfType<LightCursor>();
         CheckIfThereIsFearObject();
         Continue();
+    }
+    void Awake()
+    {
+        StartCoroutine(HoldStart());
     }
     void Pause()
     {

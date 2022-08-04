@@ -92,7 +92,7 @@ public class Tutorial : MonoBehaviour
         {
             case 4:
                 {
-                    willShowHealth = true;
+                    willShowHealth = true; //Still Error.
                     health.SetActive(true);
                     fearMeterAnimControl.Play("FearMeterFading");
                     break;

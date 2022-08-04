@@ -1,15 +1,15 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.UI;
 public class Fear : MonoBehaviour
 {
+    public static Fear objInstance = null;
     public static bool willShowHealth = false;
+    public bool isDieAfterShock = false;
     bool isDie = false;
     bool isDieAfterJump = false;
     bool isDieAfterEmptyMeter = false;
-    public static bool isDieAfterShock = false;
     [Header("Slider")]
     public Slider fearMeter = null;
     public float maxFearValue = 100f;
@@ -20,7 +20,7 @@ public class Fear : MonoBehaviour
     [Header("QTE")]
     public GameObject qTEImage = null;
     public Image qTEFill = null;
-    public static bool hasDoneQTE = false;
+    public bool hasDoneQTE = false;
     [Range(0f, 1f)] [SerializeField] float qTEFillAdd = 0.125f;
     [SerializeField] float qTEFillDiffTime = 0.1f;
     [Range(-1f, 0f)] [SerializeField] float qTEFillDiff = -0.01f;
@@ -34,10 +34,20 @@ public class Fear : MonoBehaviour
     public PlayableDirector dieSoundTimeline = null;
     public AudioSource shockSound = null;
     public PlayerMovement playerMovement = null;
+    float fadeOutTime = 2f;
     [Header("Checkpoint")]
     public GameObject player = null;
     public Death[] dieTraps = new Death[3];
-    public static bool hasDied = false;
+    public bool hasDied = false;
+    void Awake()
+    {
+        if (objInstance == null && SceneManagement.GetCurrentScene() != 1)
+        {
+            objInstance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (objInstance != this) Destroy(gameObject);
+    }
     void Start()
     {
         try
@@ -61,7 +71,7 @@ public class Fear : MonoBehaviour
     }
     IEnumerator HoldRespawn()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(fadeOutTime);
         backgroundControl.SetBool("IsFadeOut", false);
         Respawn();
     }
@@ -72,17 +82,30 @@ public class Fear : MonoBehaviour
         playerControlAnim.SetBool("IsJumping", false);
         playerControlAnim.SetBool("IsCrouching", false);
     }
+    void ReleasePlayer()
+    {
+        playerMovement.rigidBody.isKinematic = false;
+        playerMovement.enabled = playerMovement.rigidBody.useGravity = true;
+        qTEFill.fillAmount = 0f;
+        qTEImage.SetActive(false);
+    }
     void CheckCauseOfDeath()
     {
-        if (isDieAfterEmptyMeter)
+        if (isDieAfterShock)
         {
-            isDieAfterEmptyMeter = false;
-            playerControlAnim.SetBool("IsDieAfterEmptyMeter", isDieAfterEmptyMeter);
+            isDieAfterShock = HandWall.startPulling = HandWall.hasPulled = false;
+            playerControlAnim.SetBool("IsDieAfterShock", isDieAfterShock);
+            ReleasePlayer();
         }
         else if (isDieAfterJump)
         {
             isDieAfterJump = false;
             playerControlAnim.SetBool("IsDieAfterJump", isDieAfterJump);
+        }
+        else if (isDieAfterEmptyMeter)
+        {
+            isDieAfterEmptyMeter = false;
+            playerControlAnim.SetBool("IsDieAfterEmptyMeter", isDieAfterEmptyMeter);
         }
     }
     void SetRespawn()
@@ -95,16 +118,22 @@ public class Fear : MonoBehaviour
     }
     IEnumerator FadeOut()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(fadeOutTime);
         SetRespawn();
         backgroundControl.SetBool("IsFadeIn", false);
         backgroundControl.SetBool("IsFadeOut", true);
         StartCoroutine(HoldRespawn());
     }
-    public IEnumerator FadeIn(float waitTime)
+    IEnumerator HandReturn()
     {
-        yield return new WaitForSeconds(waitTime);
+        yield return new WaitForSeconds(1f);
+        HandWall.hasPulled = true;
+    }
+    public IEnumerator FadeIn(float fadeInTime)
+    {
+        yield return new WaitForSeconds(fadeInTime);
         backgroundControl.SetBool("IsFadeIn", true);
+        StartCoroutine(HandReturn());
         StartCoroutine(FadeOut());
     }
     void SetDie()
@@ -133,22 +162,14 @@ public class Fear : MonoBehaviour
         lastTimeDamaged = Time.time;
         fearMeter.value += handQTEDmg;
     }
-    public static IEnumerator ResetHand()
+    public IEnumerator ResetHand(float resetHandTime)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(resetHandTime);
         HandWall.turnOnMagnet = HandWall.hasGrabbedPlayer = hasDoneQTE = false;
-    }
-    void ReleasePlayer()
-    {
-        playerMovement.rigidBody.isKinematic = false;
-        playerMovement.enabled = playerMovement.rigidBody.useGravity = hasDoneQTE = true;
-        qTEFill.fillAmount = 0f;
-        qTEImage.SetActive(false);
-        StartCoroutine(ResetHand());
     }
     void DieAfterShock()
     {
-        isDieAfterShock = hasDoneQTE = isDie = true;
+        isDieAfterShock = hasDoneQTE = true;
         playerControlAnim.SetBool("IsDieAfterShock", isDieAfterShock);
         shockSound.Play();
     }
@@ -157,7 +178,12 @@ public class Fear : MonoBehaviour
         qTEImage.SetActive(true);
         if (Input.GetKeyDown(KeyCode.Return)) qTEFill.fillAmount += qTEFillAdd;
         if (fearMeter.value == maxFearValue) DieAfterShock();
-        else if (qTEFill.fillAmount == 1f) ReleasePlayer();
+        else if (qTEFill.fillAmount == 1f)
+        {
+            ReleasePlayer();
+            hasDoneQTE = true;
+            StartCoroutine(ResetHand(1f));
+        }
         else if (currentTime >= qTEFillDiffTime)
         {
             qTEFill.fillAmount += qTEFillDiff;

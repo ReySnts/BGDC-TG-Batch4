@@ -6,15 +6,15 @@ public class HandWall : MonoBehaviour
     public Animator boneAnimControl = null;
     public Transform player = null;
     public Transform handMagnet = null;
-    Fear fear = null;
     PlayerMovement playerMovement = null;
     [Header("Values")]
     string colliderName = "Player";
     bool isPlayerFelt = false;
     bool isAttHeld = false;
-    bool startPulling = false;
     public static bool turnOnMagnet = false;
     public static bool hasGrabbedPlayer = false;
+    public static bool startPulling = false;
+    public static bool hasPulled = false;
     float waitTime = 1f;
     float handDmg = 35f;
     float fearValForGrab = 60f;
@@ -23,7 +23,6 @@ public class HandWall : MonoBehaviour
     Vector3 handMagnetPosition = Vector3.zero;
     void Start()
     {
-        fear = FindObjectOfType<Fear>();
         playerMovement = FindObjectOfType<PlayerMovement>();
         handMagnetPosition = handMagnet.position + Vector3.forward * zDiff;
     }
@@ -38,25 +37,25 @@ public class HandWall : MonoBehaviour
     void SetAnim()
     {
         boneAnimControl.SetBool("IsPlayerFelt", isPlayerFelt);
-        boneAnimControl.SetFloat("FearValue", fear.fearMeter.value);
-        boneAnimControl.SetBool("HasDoneQTE", Fear.hasDoneQTE);
+        boneAnimControl.SetFloat("FearValue", Fear.objInstance.fearMeter.value);
+        boneAnimControl.SetBool("HasDoneQTE", Fear.objInstance.hasDoneQTE);
+        boneAnimControl.SetBool("HasPulled", hasPulled);
     }
     IEnumerator HoldRestart()
     {
         yield return new WaitForSeconds(waitTime);
-        Fear.isDieAfterShock = startPulling = false;
-        SceneManagement.Restart();
+        StartCoroutine(Fear.objInstance.FadeIn(waitTime));
+        StartCoroutine(Fear.objInstance.ResetHand(5f));
     }
     void Pull()
     {
-        handMagnetPosition = handMagnet.position + Vector3.forward * zDiff;
-        player.position = handMagnetPosition;
         if (!startPulling)
         {
             StartCoroutine(HoldRestart());
-            StartCoroutine(Fear.ResetHand());
             startPulling = true;
         }
+        handMagnetPosition = handMagnet.position + Vector3.forward * zDiff;
+        player.position = handMagnetPosition;
     }
     void Grab()
     {
@@ -67,13 +66,13 @@ public class HandWall : MonoBehaviour
     {
         isAttHeld = true;
         yield return new WaitForSeconds(waitTime);
-        if (fear.fearMeter.value < fearValForGrab) fear.fearMeter.value += handDmg;
+        if (Fear.objInstance.fearMeter.value < fearValForGrab) Fear.objInstance.fearMeter.value += handDmg;
         isAttHeld = false;
     }
     void Attack()
     {
         if (!isAttHeld) StartCoroutine(HoldAttack());
-        if (fear.fearMeter.value >= fearValForGrab)
+        if (Fear.objInstance.fearMeter.value >= fearValForGrab)
         {
             playerMovement.enabled = playerMovement.rigidBody.useGravity = false;
             playerMovement.rigidBody.isKinematic = isAttHeld = turnOnMagnet = true;
@@ -85,7 +84,7 @@ public class HandWall : MonoBehaviour
         {
             if (!turnOnMagnet) Attack();
             else if (!hasGrabbedPlayer) Grab();
-            else if (Fear.isDieAfterShock) Pull();
+            else if (Fear.objInstance.isDieAfterShock) Pull();
         }
         SetAnim();
     }

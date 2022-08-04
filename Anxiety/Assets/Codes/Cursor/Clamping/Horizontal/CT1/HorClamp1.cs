@@ -7,6 +7,6 @@ public class HorClamp1 : HorClamp
     }
     void Update()
     {
-        if (Fear.hasDied && (CheckPoint.checkPointName == null || CheckPoint.checkPointName == "Moshrum")) TurnOnLeftCursor();
+        if (Fear.objInstance.hasDied && (CheckPoint.checkPointName == null || CheckPoint.checkPointName == "Moshrum")) TurnOnLeftCursor();
     }
 }
