@@ -6,17 +6,26 @@ public class CheckPoint : MonoBehaviour
     [Header("Values")]
     public static string checkPointName = null;
     public Vector3 respawnPoint = new Vector3(0f, 0f, 0f);
-    float yDiff = 0.64214f;
+    bool isScriptEnabled = false;
     string colliderName = "Moshrum";
+    float yDiff = 0.64214f;
     void Start()
     {
         respawnPoint = transform.position;
+    }
+    void OnDisable()
+    {
+        isScriptEnabled = false;
+    }
+    void OnEnable()
+    {
+        isScriptEnabled = true;
     }
     void OnTriggerEnter(Collider other)
     {
         try
         {
-            if (other.name.Substring(0, colliderName.Length) == colliderName)
+            if (isScriptEnabled && other.name.Substring(0, colliderName.Length) == colliderName)
             {
                 checkPointName = other.name;
                 checkPoints.Add(other.gameObject);

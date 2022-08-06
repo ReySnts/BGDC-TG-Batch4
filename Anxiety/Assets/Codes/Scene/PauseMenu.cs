@@ -25,6 +25,36 @@ public class PauseMenu : MonoBehaviour
     {
         StartCoroutine(HoldStart());
     }
+    void CheckIfLevelUseHealth()
+    {
+        if (Tutorial.objInstance != null)
+        {
+            if (Tutorial.objInstance.isFadingFearMeter) Tutorial.objInstance.IntroduceFearMeter();
+            else
+            {
+                Tutorial.objInstance.HideFearMeter();
+                if (Tutorial.objInstance.turnOnLightCursor) Tutorial.objInstance.IntroduceLightCursor();
+                else
+                {
+                    Tutorial.objInstance.HideLightCursor();
+                    if (Tutorial.objInstance.hasTurnedOnLightCursor) Tutorial.objInstance.UnlockLightCursor();
+                }
+            }
+        }
+        else
+        {
+            health.SetActive(true);
+            lightCursor.enabled = true;
+        }
+    }
+    void Continue()
+    {
+        pauseMenu.SetActive(false);
+        ambience.Stop();
+        sounds.SetActive(true);
+        CheckIfLevelUseHealth();
+        Time.timeScale = 1f;
+    }
     void Pause()
     {
         pauseMenu.SetActive(true);
@@ -33,20 +63,6 @@ public class PauseMenu : MonoBehaviour
         sounds.SetActive(false);
         ambience.Play();
         Time.timeScale = 0f;
-    }
-    void CheckIfLevelUseHealth()
-    {
-        if (Tutorial.willShowHealth || Fear.willShowHealth) health.SetActive(true);
-        else health.SetActive(false);
-    }
-    void Continue()
-    {
-        pauseMenu.SetActive(false);
-        ambience.Stop();
-        lightCursor.enabled = true;
-        CheckIfLevelUseHealth();
-        sounds.SetActive(true);
-        Time.timeScale = 1f;
     }
     void Update()
     {

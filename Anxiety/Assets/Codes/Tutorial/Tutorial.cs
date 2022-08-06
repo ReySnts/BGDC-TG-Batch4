@@ -1,21 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 public class Tutorial : MonoBehaviour
 {
-    int dialogueIdx = 0;
-    float waitTime = 2f;
-    bool onButtonPress = false;
-    public static bool willShowHealth = false;
     [Header("References")]
     public GameObject health = null;
     public GameObject[] roomLights = new GameObject[2];
+    public Slider fearMeterFill = null;
     PauseMenu pauseMenu = null;
     Dialogue dialogue = null;
     PlayerMovement playerMovement = null;
     LightCursor lightCursor = null;
+    CheckPoint checkPoint = null;
     Door tutorialDoor = null;
+    [Header("Values")]
+    public static Tutorial objInstance = null;
+    public bool isFadingFearMeter = false;
+    public bool turnOnLightCursor = false;
+    public bool hasTurnedOnLightCursor = false;
+    bool onButtonPress = false;
+    int dialogueIdx = 0;
+    float waitTime = 2f;
     [Header("Dialogue")]
     Queue<string> dialogueStorage = new Queue<string>();
     bool endDialogue = false;
@@ -33,6 +40,15 @@ public class Tutorial : MonoBehaviour
     public TextMeshProUGUI characterName = null;
     public TextMeshProUGUI dialogueSentence = null;
     public TextMeshProUGUI guidance = null;
+    void Awake()
+    {
+        if (objInstance == null && SceneManagement.GetCurrentScene() == 1)
+        {
+            objInstance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (objInstance != this) Destroy(gameObject);
+    }
     IEnumerator AnimateEachLetter(string sentence)
     {
         dialogueSentence.text = "";
@@ -57,6 +73,16 @@ public class Tutorial : MonoBehaviour
         }
         else EndDialogue();
     }
+    void SetGuideline()
+    {
+        guideline = FindObjectOfType<Guideline>();
+        foreach (string sentence in guideline.sentences) guidelineStorage.Enqueue(sentence);
+        guidance.text = guidelineStorage.Dequeue();
+        fearMeterFill.interactable = false;
+        fearMeterFill.fillRect = null;
+        health.SetActive(false);
+        foreach (GameObject roomLight in roomLights) roomLight.SetActive(true);
+    }
     void SetDialogue()
     {
         dialogue = FindObjectOfType<Dialogue>();
@@ -64,21 +90,14 @@ public class Tutorial : MonoBehaviour
         foreach (string sentence in dialogue.sentences) dialogueStorage.Enqueue(sentence);
         StartDialogue();
     }
-    void SetGuideline()
-    {
-        health.SetActive(false);
-        (lightCursor = FindObjectOfType<LightCursor>()).enabled = false;
-        guideline = FindObjectOfType<Guideline>();
-        foreach (GameObject roomLight in roomLights) roomLight.SetActive(true);
-        foreach (string sentence in guideline.sentences) guidelineStorage.Enqueue(sentence);
-        guidance.text = guidelineStorage.Dequeue();
-    }
     void DisableSomeObjects()
     {
         (pauseMenu = FindObjectOfType<PauseMenu>()).enabled = 
-            (playerMovement = FindObjectOfType<PlayerMovement>()).enabled = 
-                (tutorialDoor = FindObjectOfType<Door>()).enabled = 
-                    false;
+            (playerMovement = FindObjectOfType<PlayerMovement>()).enabled =
+                (lightCursor = FindObjectOfType<LightCursor>()).enabled =
+                    (checkPoint = FindObjectOfType<CheckPoint>()).enabled =
+                        (tutorialDoor = FindObjectOfType<Door>()).enabled = 
+                            false;
     }
     void Start()
     {
@@ -86,36 +105,64 @@ public class Tutorial : MonoBehaviour
         SetDialogue();
         SetGuideline();
     }
+    public void UnlockLightCursor()
+    {
+        lightCursorFadingAnimControl.SetBool("HasTurnedOnLightCursor", hasTurnedOnLightCursor);
+        lightCursor.enabled = true;
+    }
+    public void HideLightCursor()
+    {
+        lightCursorFadingAnimControl.SetBool("IsLightCursorFading", false);
+        lightCursorFadingAnimControl.SetBool("HasTurnedOnLightCursor", hasTurnedOnLightCursor);
+        lightCursor.enabled = false;
+    }
+    public void IntroduceLightCursor()
+    {
+        lightCursor.enabled = true;
+        lightCursorFadingAnimControl.SetBool("IsLightCursorFading", true);
+    }
+    public void HideFearMeter()
+    {
+        fearMeterAnimControl.SetBool("IsFearMeterFading", false);
+        health.SetActive(false);
+    }
+    public void IntroduceFearMeter()
+    {
+        health.SetActive(true);
+        fearMeterAnimControl.SetBool("IsFearMeterFading", true);
+    }
     void PlayGuideAnim()
     {
         switch (guidelineStorage.Count)
         {
             case 4:
                 {
-                    willShowHealth = true; //Still Error.
-                    health.SetActive(true);
-                    fearMeterAnimControl.Play("FearMeterFading");
+                    isFadingFearMeter = true;
+                    IntroduceFearMeter();
                     break;
                 }
             case 3:
                 {
-                    willShowHealth = false;
-                    health.SetActive(false);
+                    isFadingFearMeter = false;
+                    HideFearMeter();
                     foreach (GameObject roomLight in roomLights) roomLight.SetActive(false);
-                    lightCursor.enabled = true;
-                    lightCursorFadingAnimControl.Play("LightCursorFading");
+                    turnOnLightCursor = true;
+                    IntroduceLightCursor();
                     break;
                 }
             case 2:
                 {
-                    lightCursorFadingAnimControl.SetBool("IsStopFading", true);
-                    mushroomGlowingAnimControl.SetBool("IsMushroomGlowing", true);
+                    turnOnLightCursor = false;
+                    HideLightCursor();
+                    hasTurnedOnLightCursor = true;
+                    UnlockLightCursor();
+                    mushroomGlowingAnimControl.SetBool("IsCheckpointGlowing", true);
                     break;
                 }
             case 1:
                 {
-                    mushroomGlowingAnimControl.SetBool("IsMushroomGlowing", false);
-                    tutorialDoor.enabled = true;
+                    mushroomGlowingAnimControl.SetBool("IsCheckpointGlowing", false);
+                    tutorialDoor.enabled = checkPoint.enabled = true;
                     break;
                 }
             default:
