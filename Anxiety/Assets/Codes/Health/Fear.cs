@@ -21,6 +21,7 @@ public class Fear : MonoBehaviour
     public GameObject qTEImage = null;
     public Image qTEFill = null;
     public bool hasDoneQTE = false;
+    bool hasStartedQTE = false;
     [Range(0f, 1f)] [SerializeField] float qTEFillAdd = 0.125f;
     [SerializeField] float qTEFillDiffTime = 0.1f;
     [Range(-1f, 0f)] [SerializeField] float qTEFillDiff = -0.01f;
@@ -54,6 +55,7 @@ public class Fear : MonoBehaviour
         {
             qTEFill.fillAmount = fearMeter.value = fearMeter.minValue = minFearValue;
             fearMeter.maxValue = maxFearValue;
+            fearMeter.interactable = false;
             qTEImage.SetActive(false);
         }
         catch
@@ -165,7 +167,7 @@ public class Fear : MonoBehaviour
     public IEnumerator ResetHand(float resetHandTime)
     {
         yield return new WaitForSeconds(resetHandTime);
-        HandWall.turnOnMagnet = HandWall.hasGrabbedPlayer = hasDoneQTE = false;
+        HandWall.turnOnMagnet = HandWall.hasGrabbedPlayer = hasDoneQTE = hasStartedQTE = false;
     }
     void DieAfterShock()
     {
@@ -175,8 +177,11 @@ public class Fear : MonoBehaviour
     }
     void StartQTE()
     {
-        qTEImage.SetActive(true);
-        if (Input.GetKeyDown(KeyCode.Return)) qTEFill.fillAmount += qTEFillAdd;
+        if (!hasStartedQTE)
+        {
+            qTEImage.SetActive(true);
+            hasStartedQTE = true;
+        }
         if (fearMeter.value == maxFearValue) DieAfterShock();
         else if (qTEFill.fillAmount == 1f)
         {
@@ -184,6 +189,7 @@ public class Fear : MonoBehaviour
             hasDoneQTE = true;
             StartCoroutine(ResetHand(1f));
         }
+        else if (Input.GetKeyDown(KeyCode.Return)) qTEFill.fillAmount += qTEFillAdd;
         else if (currentTime >= qTEFillDiffTime)
         {
             qTEFill.fillAmount += qTEFillDiff;

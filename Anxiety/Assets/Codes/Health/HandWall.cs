@@ -1,34 +1,47 @@
 using UnityEngine;
+using System;
 using System.Collections;
 public class HandWall : MonoBehaviour
 {
     [Header("References")]
     public Animator boneAnimControl = null;
     public Transform player = null;
-    public Transform handMagnet = null;
-    PlayerMovement playerMovement = null;
-    [Header("Values")]
     string colliderName = "Player";
-    bool isPlayerFelt = false;
-    bool isAttHeld = false;
+    PlayerMovement playerMovement = null;
+    public Transform handMagnet = null;
+    Vector3 handMagnetPosition = Vector3.zero;
+    public static Action<bool> stopMovement = null;
+    [Header("Booleans")]
     public static bool turnOnMagnet = false;
     public static bool hasGrabbedPlayer = false;
     public static bool startPulling = false;
     public static bool hasPulled = false;
+    bool isPlayerFelt = false;
+    bool isAttHeld = false;
+    [Header("Floats")]
+    static float lastGrabbedTime = 0f;
+    float grabDuration = 0.01f;
     float waitTime = 1f;
     float handDmg = 35f;
     float fearValForGrab = 60f;
     float zDiff = -0.18f;
     float grabSpeed = 0.0125f;
-    Vector3 handMagnetPosition = Vector3.zero;
     void Start()
     {
         playerMovement = FindObjectOfType<PlayerMovement>();
-        handMagnetPosition = handMagnet.position + Vector3.forward * zDiff;
     }
     void OnTriggerEnter(Collider other)
     {
-        if (other.name == colliderName) isPlayerFelt = true;
+        if (other.name == colliderName)
+        {
+            if (Time.time - lastGrabbedTime < grabDuration) isPlayerFelt = false;
+            else
+            {
+                if (turnOnMagnet) lastGrabbedTime = Time.time;
+                isPlayerFelt = true;
+                stopMovement?.Invoke(isPlayerFelt);
+            }
+        }
     }
     void OnTriggerExit(Collider other)
     {
@@ -54,7 +67,7 @@ public class HandWall : MonoBehaviour
             StartCoroutine(HoldRestart());
             startPulling = true;
         }
-        handMagnetPosition = handMagnet.position + Vector3.forward * zDiff;
+        //handMagnetPosition = handMagnet.position + Vector3.forward * zDiff;
         player.position = handMagnetPosition;
     }
     void Grab()
@@ -71,15 +84,16 @@ public class HandWall : MonoBehaviour
     }
     void Attack()
     {
-        if (!isAttHeld) StartCoroutine(HoldAttack());
         if (Fear.objInstance.fearMeter.value >= fearValForGrab)
         {
             playerMovement.enabled = playerMovement.rigidBody.useGravity = false;
-            playerMovement.rigidBody.isKinematic = isAttHeld = turnOnMagnet = true;
+            playerMovement.rigidBody.isKinematic = turnOnMagnet = true;
         }
+        else if (!isAttHeld) StartCoroutine(HoldAttack());
     }
     void Update()
     {
+        handMagnetPosition = handMagnet.position + Vector3.forward * zDiff;
         if (isPlayerFelt)
         {
             if (!turnOnMagnet) Attack();
