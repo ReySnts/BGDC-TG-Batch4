@@ -1,19 +1,44 @@
 using UnityEngine;
 public class HandWallsMovement : MonoBehaviour
 {
-    bool isPlayerFelt = false;
-    float moveSpeed = 2f;
-    void FeelPlayer(bool isPlayerFelt)
+    public static HandWallsMovement objInstance = null;
+    [Range(0f, 6f)] [SerializeField] float moveSpeed = 2f;
+    Vector3 initialPosition = Vector3.zero;
+    void Awake()
     {
-        moveSpeed = 0f;
-        this.isPlayerFelt = isPlayerFelt;
+        if (objInstance == null && SceneManagement.GetCurrentScene() == 3)
+        {
+            objInstance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (objInstance != this) Destroy(gameObject);
+    }
+    void ResetPosition()
+    {
+        transform.position = initialPosition;
+    }
+    public void CheckFeeling(bool isPlayerFelt)
+    {
+        if (isPlayerFelt) moveSpeed = 0f;
+        else moveSpeed = 2f;
+    }
+    void OnEnable()
+    {
+        HandWall.stopMovement += CheckFeeling;
+        Fear.objInstance.resetHandWallsPosition += ResetPosition;
     }
     void Start()
     {
-        HandWall.stopMovement += FeelPlayer;
+        initialPosition = transform.position;
+        Fear.objInstance.resetHandWallsPosition?.Invoke();
     }
     void Update()
     {
         transform.position += (Vector3.right * moveSpeed * Time.deltaTime);
+    }
+    void OnDisable()
+    {
+        HandWall.stopMovement -= CheckFeeling;
+        Fear.objInstance.resetHandWallsPosition -= ResetPosition;
     }
 }

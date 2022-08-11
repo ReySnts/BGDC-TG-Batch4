@@ -6,17 +6,17 @@ public class HandWall : MonoBehaviour
     [Header("References")]
     public Animator boneAnimControl = null;
     public Transform player = null;
-    string colliderName = "Player";
-    PlayerMovement playerMovement = null;
     public Transform handMagnet = null;
-    Vector3 handMagnetPosition = Vector3.zero;
-    public static Action<bool> stopMovement = null;
+    public static event Action<bool> stopMovement = null;
+    PlayerMovement playerMovement = null;
+    string colliderName = "Player";
     [Header("Booleans")]
     public static bool turnOnMagnet = false;
     public static bool hasGrabbedPlayer = false;
     public static bool startPulling = false;
     public static bool hasPulled = false;
     bool isPlayerFelt = false;
+    bool hasStopped = false;
     bool isAttHeld = false;
     [Header("Floats")]
     static float lastGrabbedTime = 0f;
@@ -26,6 +26,7 @@ public class HandWall : MonoBehaviour
     float fearValForGrab = 60f;
     float zDiff = -0.18f;
     float grabSpeed = 0.0125f;
+    Vector3 handMagnetPosition = Vector3.zero;
     void Start()
     {
         playerMovement = FindObjectOfType<PlayerMovement>();
@@ -39,7 +40,6 @@ public class HandWall : MonoBehaviour
             {
                 if (turnOnMagnet) lastGrabbedTime = Time.time;
                 isPlayerFelt = true;
-                stopMovement?.Invoke(isPlayerFelt);
             }
         }
     }
@@ -67,7 +67,6 @@ public class HandWall : MonoBehaviour
             StartCoroutine(HoldRestart());
             startPulling = true;
         }
-        //handMagnetPosition = handMagnet.position + Vector3.forward * zDiff;
         player.position = handMagnetPosition;
     }
     void Grab()
@@ -88,18 +87,34 @@ public class HandWall : MonoBehaviour
         {
             playerMovement.enabled = playerMovement.rigidBody.useGravity = false;
             playerMovement.rigidBody.isKinematic = turnOnMagnet = true;
+            Fear.objInstance.playerMoveSounds.SetActive(false);
         }
         else if (!isAttHeld) StartCoroutine(HoldAttack());
+    }
+    void Hunt()
+    {
+        if (!turnOnMagnet) Attack();
+        else if (!hasGrabbedPlayer) Grab();
+        else if (Fear.objInstance.isDieAfterShock) Pull();
+    }
+    void CheckFeelPlayer()
+    {
+        if (!hasStopped && isPlayerFelt)
+        {
+            stopMovement?.Invoke(true);
+            hasStopped = true;
+        }
+        else if (hasStopped && !isPlayerFelt)
+        {
+            stopMovement?.Invoke(false);
+            hasStopped = false;
+        }
     }
     void Update()
     {
         handMagnetPosition = handMagnet.position + Vector3.forward * zDiff;
-        if (isPlayerFelt)
-        {
-            if (!turnOnMagnet) Attack();
-            else if (!hasGrabbedPlayer) Grab();
-            else if (Fear.objInstance.isDieAfterShock) Pull();
-        }
+        CheckFeelPlayer();
+        if (isPlayerFelt) Hunt();
         SetAnim();
     }
 }

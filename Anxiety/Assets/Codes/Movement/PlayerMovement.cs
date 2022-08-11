@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
     //public Transform shadow = null;
     public Rigidbody rigidBody = null;
     public SpriteRenderer spriteRenderer = null;
+    public GameObject head = null;
     BoxCollider boxCol = null;
     CapsuleCollider capsCol = null;
     float x = 0f;
@@ -158,7 +159,14 @@ public class PlayerMovement : MonoBehaviour
     void StartToJump()
     {
         velocity.y = jumpForce;
-        rigidBody.velocity += new Vector3(x * walkSpeed, velocity.y, 0f);
+        if (
+            !Physics.Raycast(
+                head.transform.position, 
+                head.transform.TransformDirection(Vector3.up), 
+                0.2f, 
+                groundMask
+            )
+        ) rigidBody.velocity += new Vector3(x * walkSpeed, velocity.y, 0f);
         playerControlAnim.SetBool("IsJumping", true);
         startJump = true;
     }
@@ -171,6 +179,14 @@ public class PlayerMovement : MonoBehaviour
     void SetGravity()
     {
         if (isGround) velocity.y = -2f;
+        if (
+            Physics.Raycast(
+                head.transform.position, 
+                head.transform.TransformDirection(Vector3.up), 
+                0.2f, 
+                groundMask
+            )
+        ) velocity.y = -0.5f;
         velocity.y += (gravity * Time.deltaTime);
         rigidBody.velocity += new Vector3(x * walkSpeed, velocity.y, 0f);
     }
@@ -197,6 +213,7 @@ public class PlayerMovement : MonoBehaviour
         playerControlAnim.SetBool("IsJumping", false);
         startLand = false;
     }
+
     void Update()
     {
         Walk();
