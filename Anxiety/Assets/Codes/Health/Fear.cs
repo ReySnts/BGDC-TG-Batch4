@@ -8,9 +8,10 @@ public class Fear : MonoBehaviour
     [Header("Booleans")]
     public static bool willShowHealth = false;
     public bool isDieAfterShock = false;
-    bool isDie = false;
+    public bool isDie = false;
     bool isDieAfterJump = false;
     bool isDieAfterEmptyMeter = false;
+    bool isDieAfterShockBecauseSpike = false;
     [Header("Slider")]
     public Slider fearMeter = null;
     public float maxFearValue = 100f;
@@ -20,7 +21,6 @@ public class Fear : MonoBehaviour
     [SerializeField] float darkDamageCooldown = 0.5f;
     [Header("QTE")]
     public GameObject qTEImage = null;
-    public GameObject playerMoveSounds = null;
     public Image qTEFill = null;
     public bool hasDoneQTE = false;
     bool hasStartedQTE = false;
@@ -36,14 +36,14 @@ public class Fear : MonoBehaviour
     public Animator backgroundControl = null;
     public PlayableDirector dieSoundTimeline = null;
     public AudioSource shockSound = null;
-    public PlayerMovement playerMovement = null;
+    public GameObject playerMoveSounds = null;
     public delegate void ResetPosition();
     public ResetPosition resetHandWallsPosition = null;
     float fadeOutTime = 2f;
     [Header("Checkpoint")]
     public GameObject player = null;
-    public Death[] dieTraps = new Death[3];
-    public bool hasDied = false;
+    public Death[] dieTraps = new Death[40];
+    public bool hasDied = false; // for lightCursorClamp.
     void Awake()
     {
         if (objInstance == null && SceneManagement.GetCurrentScene() != 1)
@@ -64,7 +64,7 @@ public class Fear : MonoBehaviour
         }
         catch
         {
-            qTEImage = playerMoveSounds = null;
+            qTEImage = null;
             qTEFill = null;
         }
     }
@@ -74,15 +74,15 @@ public class Fear : MonoBehaviour
         {
             qTEFill.fillAmount = 0f;
             qTEImage.SetActive(false);
-            playerMoveSounds.SetActive(true);
         }
         catch
         {
-            qTEImage = playerMoveSounds = null;
+            qTEImage = null;
             qTEFill = null;
         }
-        playerMovement.rigidBody.isKinematic = false;
-        playerMovement.enabled = playerMovement.rigidBody.useGravity = true;
+        PlayerMovement.objInstance.rigidBody.isKinematic = false;
+        PlayerMovement.objInstance.enabled = PlayerMovement.objInstance.rigidBody.useGravity = true;
+        playerMoveSounds.SetActive(true);
     }
     void EffectByHandQTE()
     {
@@ -127,9 +127,29 @@ public class Fear : MonoBehaviour
             EffectByHandQTE();
         }
     }
+    void SetDie()
+    {
+        fearMeter.value = maxFearValue;
+        PlayerMovement.objInstance.enabled = false;
+        playerMoveSounds.SetActive(false);
+        isDie = true;
+        HandWallsMovement.objInstance?.CheckFeeling(true);
+    }
+    public void DieAfterShockBecauseSpike()
+    {
+        isDieAfterShockBecauseSpike = true;
+        playerControlAnim.SetBool("IsDieAfterShock", isDieAfterShockBecauseSpike);
+        SetDie();
+    }
+    public void DieAfterJump()
+    {
+        isDieAfterJump = true;
+        playerControlAnim.SetBool("IsDieAfterJump", isDieAfterJump);
+        SetDie();
+    }
     void Respawn()
     {
-        isDie = false;
+        isDie = hasDied = false;
         StopAllCoroutines();
         ReleasePlayer();
         HandWallsMovement.objInstance?.CheckFeeling(false);
@@ -140,18 +160,6 @@ public class Fear : MonoBehaviour
         yield return new WaitForSeconds(fadeOutTime);
         backgroundControl.SetBool("IsFadeOut", false);
         Respawn();
-    }
-    void SetDie()
-    {
-        playerMovement.enabled = false;
-        isDie = true;
-    }
-    public void DieAfterJump()
-    {
-        fearMeter.value = maxFearValue;
-        isDieAfterJump = true;
-        playerControlAnim.SetBool("IsDieAfterJump", isDieAfterJump);
-        SetDie();
     }
     void ResetAnimForRespawn()
     {
@@ -172,6 +180,11 @@ public class Fear : MonoBehaviour
             isDieAfterJump = false;
             playerControlAnim.SetBool("IsDieAfterJump", isDieAfterJump);
         }
+        else if (isDieAfterShockBecauseSpike)
+        {
+            isDieAfterShockBecauseSpike = false;
+            playerControlAnim.SetBool("IsDieAfterShock", isDieAfterShockBecauseSpike);
+        }
         else if (isDieAfterEmptyMeter)
         {
             isDieAfterEmptyMeter = false;
@@ -181,7 +194,7 @@ public class Fear : MonoBehaviour
     void SetRespawn()
     {
         fearMeter.value = minFearValue;
-        player.transform.position = FindObjectOfType<CheckPoint>().respawnPoint;
+        player.transform.position = CheckPoint.objInstance.respawnPoint;
         CheckCauseOfDeath();
         ResetAnimForRespawn();
         resetHandWallsPosition?.Invoke();
@@ -214,7 +227,6 @@ public class Fear : MonoBehaviour
         playerControlAnim.SetBool("IsDieAfterEmptyMeter", isDieAfterEmptyMeter);
         dieSoundTimeline.Play();
         SetDie();
-        HandWallsMovement.objInstance?.CheckFeeling(true);
     }
     void EffectByLight()
     {

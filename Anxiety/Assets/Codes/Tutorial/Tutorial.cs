@@ -5,18 +5,14 @@ using UnityEngine.UI;
 using TMPro;
 public class Tutorial : MonoBehaviour
 {
+    public static Tutorial objInstance = null;
     [Header("References")]
     public GameObject health = null;
     public GameObject[] roomLights = new GameObject[2];
     public Slider fearMeterFill = null;
-    PauseMenu pauseMenu = null;
     Dialogue dialogue = null;
-    PlayerMovement playerMovement = null;
-    LightCursor lightCursor = null;
-    CheckPoint checkPoint = null;
     Door tutorialDoor = null;
     [Header("Values")]
-    public static Tutorial objInstance = null;
     public bool isFadingFearMeter = false;
     public bool turnOnLightCursor = false;
     public bool hasTurnedOnLightCursor = false;
@@ -45,6 +41,7 @@ public class Tutorial : MonoBehaviour
         if (objInstance == null && SceneManagement.GetCurrentScene() == 1)
         {
             objInstance = this;
+            transform.parent = null;
             DontDestroyOnLoad(gameObject);
         }
         else if (objInstance != this) Destroy(gameObject);
@@ -60,8 +57,8 @@ public class Tutorial : MonoBehaviour
     }
     void EndDialogue()
     {
-        dialBoxAnimControl.SetBool("IsClosed", pauseMenu.enabled = true);
-        pressEnterAnimControl.SetBool("EndedDialogue", playerMovement.enabled = endDialogue = true);
+        dialBoxAnimControl.SetBool("IsClosed", PauseMenu.objInstance.enabled = true);
+        pressEnterAnimControl.SetBool("EndedDialogue", PlayerMovement.objInstance.enabled = endDialogue = true);
         guidance.text = guidelineStorage.Dequeue();
     }
     void StartDialogue()
@@ -92,12 +89,11 @@ public class Tutorial : MonoBehaviour
     }
     void DisableSomeObjects()
     {
-        (pauseMenu = FindObjectOfType<PauseMenu>()).enabled = 
-            (playerMovement = FindObjectOfType<PlayerMovement>()).enabled =
-                (lightCursor = FindObjectOfType<LightCursor>()).enabled =
-                    (checkPoint = FindObjectOfType<CheckPoint>()).enabled =
-                        (tutorialDoor = FindObjectOfType<Door>()).enabled = 
-                            false;
+        PauseMenu.objInstance.enabled = 
+        PlayerMovement.objInstance.enabled = 
+        LightCursor.objInstance.enabled = 
+        CheckPoint.objInstance.enabled =
+        (tutorialDoor = FindObjectOfType<Door>()).enabled = false;
     }
     void Start()
     {
@@ -108,17 +104,17 @@ public class Tutorial : MonoBehaviour
     public void UnlockLightCursor()
     {
         lightCursorFadingAnimControl.SetBool("HasTurnedOnLightCursor", hasTurnedOnLightCursor);
-        lightCursor.enabled = true;
+        LightCursor.objInstance.enabled = true;
     }
     public void HideLightCursor()
     {
         lightCursorFadingAnimControl.SetBool("IsLightCursorFading", false);
         lightCursorFadingAnimControl.SetBool("HasTurnedOnLightCursor", hasTurnedOnLightCursor);
-        lightCursor.enabled = false;
+        LightCursor.objInstance.enabled = false;
     }
     public void IntroduceLightCursor()
     {
-        lightCursor.enabled = true;
+        LightCursor.objInstance.enabled = true;
         lightCursorFadingAnimControl.SetBool("IsLightCursorFading", true);
     }
     public void HideFearMeter()
@@ -162,7 +158,7 @@ public class Tutorial : MonoBehaviour
             case 1:
                 {
                     mushroomGlowingAnimControl.SetBool("IsCheckpointGlowing", false);
-                    tutorialDoor.enabled = checkPoint.enabled = true;
+                    tutorialDoor.enabled = CheckPoint.objInstance.enabled = true;
                     break;
                 }
             default:

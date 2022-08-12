@@ -1,4 +1,4 @@
-public class Die3 : Death
+public class Die2 : DieAfterJump
 {
     protected override void SetRestartTime()
     {

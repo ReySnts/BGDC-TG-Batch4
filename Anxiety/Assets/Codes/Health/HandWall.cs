@@ -8,7 +8,6 @@ public class HandWall : MonoBehaviour
     public Transform player = null;
     public Transform handMagnet = null;
     public static event Action<bool> stopMovement = null;
-    PlayerMovement playerMovement = null;
     string colliderName = "Player";
     [Header("Booleans")]
     public static bool turnOnMagnet = false;
@@ -27,10 +26,6 @@ public class HandWall : MonoBehaviour
     float zDiff = -0.18f;
     float grabSpeed = 0.0125f;
     Vector3 handMagnetPosition = Vector3.zero;
-    void Start()
-    {
-        playerMovement = FindObjectOfType<PlayerMovement>();
-    }
     void OnTriggerEnter(Collider other)
     {
         if (other.name == colliderName)
@@ -85,8 +80,8 @@ public class HandWall : MonoBehaviour
     {
         if (Fear.objInstance.fearMeter.value >= fearValForGrab)
         {
-            playerMovement.enabled = playerMovement.rigidBody.useGravity = false;
-            playerMovement.rigidBody.isKinematic = turnOnMagnet = true;
+            PlayerMovement.objInstance.enabled = PlayerMovement.objInstance.rigidBody.useGravity = false;
+            PlayerMovement.objInstance.rigidBody.isKinematic = turnOnMagnet = true;
             Fear.objInstance.playerMoveSounds.SetActive(false);
         }
         else if (!isAttHeld) StartCoroutine(HoldAttack());
@@ -114,7 +109,7 @@ public class HandWall : MonoBehaviour
     {
         handMagnetPosition = handMagnet.position + Vector3.forward * zDiff;
         CheckFeelPlayer();
-        if (isPlayerFelt) Hunt();
+        if (!Fear.objInstance.isDie && isPlayerFelt) Hunt();
         SetAnim();
     }
 }

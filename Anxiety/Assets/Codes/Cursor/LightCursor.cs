@@ -1,6 +1,7 @@
 using UnityEngine;
 public class LightCursor : MonoBehaviour
 {
+    public static LightCursor objInstance = null;
     [Header("Pointer")]
     public Camera mainCam = null;
     public Transform player = null;
@@ -15,10 +16,34 @@ public class LightCursor : MonoBehaviour
     public float rightXClamp = -155f;
     public float downYClamp = 10f;
     public float upYClamp = 12.8f;
+    void Awake()
+    {
+        if (
+            objInstance == null && 
+            SceneManagement.GetCurrentScene() != 0 &&
+            SceneManagement.GetCurrentScene() != 4
+        )
+        {
+            objInstance = SetCursor.lightCursor = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (objInstance != this) Destroy(gameObject);
+    }
+    void SetLightCursorZAxis()
+    {
+        try
+        {
+            if (PlayerMovement.objInstance.leftTurn) z = player.position.z + zDiff;
+            else if (PlayerMovement.objInstance.rightTurn) z = player.position.z - zDiff;
+        }
+        catch
+        {
+            PlayerMovement.objInstance = null;
+        }
+    }
     void Update()
     {
-        if (PlayerMovement.leftTurn) z = player.position.z + zDiff;
-        else if (PlayerMovement.rightTurn) z = player.position.z - zDiff;
+        SetLightCursorZAxis();
         mousePos = Input.mousePosition;
         mousePos.z = z;
         worldPos = mainCam.ScreenToWorldPoint(mousePos);

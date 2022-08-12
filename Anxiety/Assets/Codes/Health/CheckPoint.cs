@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class CheckPoint : MonoBehaviour
 {
+    public static CheckPoint objInstance = null;
     public List<GameObject> checkPoints = new List<GameObject>();
     [Header("Values")]
     public static string checkPointName = null;
@@ -9,6 +10,15 @@ public class CheckPoint : MonoBehaviour
     bool isScriptEnabled = false;
     string colliderName = "Moshrum";
     float yDiff = 0.64214f;
+    void Awake()
+    {
+        if (objInstance == null && SceneManagement.GetCurrentScene() != 0)
+        {
+            objInstance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (objInstance != this) Destroy(gameObject);
+    }
     void Start()
     {
         respawnPoint = transform.position;

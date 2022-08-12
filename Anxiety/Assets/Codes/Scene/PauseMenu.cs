@@ -2,29 +2,13 @@ using UnityEngine;
 using System.Collections;
 public class PauseMenu : MonoBehaviour
 {
+    public static PauseMenu objInstance = null;
     [SerializeField] bool isPaused = false;
     [Header("References")]
     public GameObject pauseMenu = null;
     public GameObject health = null;
     public GameObject sounds = null;
-    public LightCursor lightCursor = null;
     public AudioSource ambience = null;
-    void CheckIfThereIsFearObject()
-    {
-        if (Fear.objInstance != null) Fear.willShowHealth = true;
-        else Fear.willShowHealth = false;
-    }
-    IEnumerator HoldStart()
-    {
-        yield return new WaitForEndOfFrame();
-        lightCursor = FindObjectOfType<LightCursor>();
-        CheckIfThereIsFearObject();
-        Continue();
-    }
-    void Awake()
-    {
-        StartCoroutine(HoldStart());
-    }
     void CheckIfLevelUseHealth()
     {
         if (Tutorial.objInstance != null)
@@ -43,8 +27,15 @@ public class PauseMenu : MonoBehaviour
         }
         else
         {
-            health.SetActive(true);
-            lightCursor.enabled = true;
+            try
+            {
+                health.SetActive(true);
+                LightCursor.objInstance.enabled = true;
+            }
+            catch
+            {
+                health = null;
+            }
         }
     }
     void Continue()
@@ -55,11 +46,47 @@ public class PauseMenu : MonoBehaviour
         CheckIfLevelUseHealth();
         Time.timeScale = 1f;
     }
+    void CheckIfThereIsFearObject()
+    {
+        if (Fear.objInstance != null) Fear.willShowHealth = true;
+        else Fear.willShowHealth = false;
+    }
+    IEnumerator HoldStart()
+    {
+        yield return new WaitForEndOfFrame();
+        CheckIfThereIsFearObject();
+        Continue();
+    }
+    void Awake()
+    {
+        try
+        {
+            if (objInstance == null && SceneManagement.GetCurrentScene() != 0)
+            {
+                objInstance = this;
+                transform.parent = null;
+                DontDestroyOnLoad(gameObject);
+            }
+            else if (objInstance != this) Destroy(gameObject);
+            StartCoroutine(HoldStart());
+        }
+        catch
+        {
+            health = null;
+        }
+    }
     void Pause()
     {
         pauseMenu.SetActive(true);
-        lightCursor.enabled = false;
-        health.SetActive(false);
+        LightCursor.objInstance.enabled = false;
+        try
+        {
+            health.SetActive(false);
+        }
+        catch
+        {
+            health = null;
+        }
         sounds.SetActive(false);
         ambience.Play();
         Time.timeScale = 0f;

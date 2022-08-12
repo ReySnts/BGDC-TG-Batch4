@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 public class PlayerMovement : MonoBehaviour
 {
+    public static PlayerMovement objInstance = null;
     [Header("Body")]
     //public Transform shadow = null;
     public Rigidbody rigidBody = null;
@@ -18,8 +19,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Vector3 velocity = Vector3.zero;
     [Header("Animation")]
     public Animator playerControlAnim = null;
-    public static bool leftTurn = false;
-    public static bool rightTurn = false;
+    public bool leftTurn = false;
+    public bool rightTurn = false;
     [SerializeField] bool isCrouch = false;
     [SerializeField] bool isRun = false;
     [SerializeField] bool startJump = false;
@@ -41,6 +42,15 @@ public class PlayerMovement : MonoBehaviour
     public AudioSource landSound = null;
     [Header("Event")]
     public UnityEvent OnLand = null;
+    void Awake()
+    {
+        if (objInstance == null && SceneManagement.GetCurrentScene() != 0)
+        {
+            objInstance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (objInstance != this) Destroy(gameObject);
+    }
     void SetCollider()
     {
         if (isCrouch)
@@ -85,7 +95,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A) && x - tempX < 0f && !leftTurn)
         {
             transform.Rotate(Vector3.up * 180f);
-            leftTurn = firstRightWalk = true; //Still Error.
+            leftTurn = firstRightWalk = true;
             rightTurn = false;
         }
         else if (Input.GetKeyDown(KeyCode.D) && x - tempX > 0f && !rightTurn)
@@ -161,9 +171,9 @@ public class PlayerMovement : MonoBehaviour
         velocity.y = jumpForce;
         if (
             !Physics.Raycast(
-                head.transform.position, 
-                head.transform.TransformDirection(Vector3.up), 
-                0.2f, 
+                head.transform.position,
+                head.transform.TransformDirection(Vector3.up),
+                0.2f,
                 groundMask
             )
         ) rigidBody.velocity += new Vector3(x * walkSpeed, velocity.y, 0f);
@@ -181,9 +191,9 @@ public class PlayerMovement : MonoBehaviour
         if (isGround) velocity.y = -2f;
         if (
             Physics.Raycast(
-                head.transform.position, 
-                head.transform.TransformDirection(Vector3.up), 
-                0.2f, 
+                head.transform.position,
+                head.transform.TransformDirection(Vector3.up),
+                0.2f,
                 groundMask
             )
         ) velocity.y = -0.5f;
@@ -213,7 +223,6 @@ public class PlayerMovement : MonoBehaviour
         playerControlAnim.SetBool("IsJumping", false);
         startLand = false;
     }
-
     void Update()
     {
         Walk();
@@ -233,7 +242,8 @@ public class PlayerMovement : MonoBehaviour
                 groundMaxDist,
                 groundMask
             )
-        ) {
+        )
+        {
             isGround = true;
             velocity.y = -2f;
         }
