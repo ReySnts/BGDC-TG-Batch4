@@ -32,9 +32,9 @@ public class Door : MonoBehaviour
         if (isTriggered && !onClick && Input.GetKeyDown(KeyCode.E))
         {
             StartCoroutine(HoldDoor());
-            doorControl.SetBool(animParamName, isOpened);
             if (isOpened) isOpened = false;
             else isOpened = true;
+            doorControl.SetBool(animParamName, isOpened);
         }
     }
 }

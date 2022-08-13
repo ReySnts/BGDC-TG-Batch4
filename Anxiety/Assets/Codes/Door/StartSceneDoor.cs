@@ -1,13 +1,13 @@
 using UnityEngine;
 using System.Collections;
-public class Level1Door : Door
+public class StartSceneDoor : Door
 {
     IEnumerator StartScene()
     {
         doorCollider.enabled = false;
         player.SetActive(false);
         yield return new WaitForSeconds(waitTime);
-        doorCollider.enabled = isOpened = true;
+        doorCollider.enabled = true;
         player.SetActive(true);
     }
 

@@ -2855,6 +2855,8 @@ MonoBehaviour:
   gravity: -9.81
   velocity: {x: 0, y: 0, z: 0}
   playerControlAnim: {fileID: 190527055}
+  leftTurn: 0
+  rightTurn: 0
   isCrouch: 0
   isRun: 0
   startJump: 0
@@ -4737,7 +4739,6 @@ MonoBehaviour:
   pauseMenu: {fileID: 1016225612}
   health: {fileID: 657319894}
   sounds: {fileID: 364101638}
-  lightCursor: {fileID: 1669453419}
   ambience: {fileID: 1132155009}
 --- !u!1 &1767069477
 GameObject:

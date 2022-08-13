@@ -35,6 +35,7 @@ public class PauseMenu : MonoBehaviour
             catch
             {
                 health = null;
+                LightCursor.objInstance = null;
             }
         }
     }
@@ -78,13 +79,14 @@ public class PauseMenu : MonoBehaviour
     void Pause()
     {
         pauseMenu.SetActive(true);
-        LightCursor.objInstance.enabled = false;
         try
         {
+            LightCursor.objInstance.enabled = false;
             health.SetActive(false);
         }
         catch
         {
+            LightCursor.objInstance = null;
             health = null;
         }
         sounds.SetActive(false);

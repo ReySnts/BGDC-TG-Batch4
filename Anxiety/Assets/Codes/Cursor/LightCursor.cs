@@ -21,7 +21,8 @@ public class LightCursor : MonoBehaviour
         if (
             objInstance == null && 
             SceneManagement.GetCurrentScene() != 0 &&
-            SceneManagement.GetCurrentScene() != 4
+            SceneManagement.GetCurrentScene() != 4 && 
+            SceneManagement.GetCurrentScene() != 5
         )
         {
             objInstance = SetCursor.lightCursor = this;
@@ -29,26 +30,23 @@ public class LightCursor : MonoBehaviour
         }
         else if (objInstance != this) Destroy(gameObject);
     }
-    void SetLightCursorZAxis()
+    void Update()
     {
         try
         {
             if (PlayerMovement.objInstance.leftTurn) z = player.position.z + zDiff;
             else if (PlayerMovement.objInstance.rightTurn) z = player.position.z - zDiff;
+            mousePos = Input.mousePosition;
+            mousePos.z = z;
+            worldPos = mainCam.ScreenToWorldPoint(mousePos);
+            x = Mathf.Clamp(worldPos.x, leftXClamp, rightXClamp);
+            y = Mathf.Clamp(worldPos.y, downYClamp, upYClamp);
+            transform.position = new Vector3(x, y, z);
         }
         catch
         {
             PlayerMovement.objInstance = null;
+            mainCam = Camera.main;
         }
-    }
-    void Update()
-    {
-        SetLightCursorZAxis();
-        mousePos = Input.mousePosition;
-        mousePos.z = z;
-        worldPos = mainCam.ScreenToWorldPoint(mousePos);
-        x = Mathf.Clamp(worldPos.x, leftXClamp, rightXClamp);
-        y = Mathf.Clamp(worldPos.y, downYClamp, upYClamp);
-        transform.position = new Vector3(x, y, z);
     }
 }
