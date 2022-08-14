@@ -44,11 +44,11 @@ public class PlayerMovement : MonoBehaviour
     public UnityEvent OnLand = null;
     void Awake()
     {
-        if (objInstance == null && SceneManagement.GetCurrentScene() != 0)
-        {
-            objInstance = this;
-            DontDestroyOnLoad(gameObject);
-        }
+        if (
+            objInstance == null && 
+            SceneManagement.GetCurrentScene() != 0 && 
+            SceneManagement.GetCurrentScene() != 5
+        ) objInstance = this;
         else if (objInstance != this) Destroy(gameObject);
     }
     void SetCollider()

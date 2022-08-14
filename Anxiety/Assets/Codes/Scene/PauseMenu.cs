@@ -62,11 +62,14 @@ public class PauseMenu : MonoBehaviour
     {
         try
         {
-            if (objInstance == null && SceneManagement.GetCurrentScene() != 0)
+            if (
+                objInstance == null && 
+                SceneManagement.GetCurrentScene() != 0 &&
+                SceneManagement.GetCurrentScene() != 5
+            )
             {
                 objInstance = this;
                 transform.parent = null;
-                DontDestroyOnLoad(gameObject);
             }
             else if (objInstance != this) Destroy(gameObject);
             StartCoroutine(HoldStart());

@@ -12,11 +12,13 @@ public class CheckPoint : MonoBehaviour
     float yDiff = 0.64214f;
     void Awake()
     {
-        if (objInstance == null && SceneManagement.GetCurrentScene() != 0)
-        {
-            objInstance = this;
-            DontDestroyOnLoad(gameObject);
-        }
+        if (
+            objInstance == null && 
+            (
+                SceneManagement.GetCurrentScene() == 1 || 
+                SceneManagement.GetCurrentScene() == 2
+            )
+        ) objInstance = this;
         else if (objInstance != this) Destroy(gameObject);
     }
     void Start()

@@ -6,11 +6,7 @@ public class HandWallsMovement : MonoBehaviour
     Vector3 initialPosition = Vector3.zero;
     void Awake()
     {
-        if (objInstance == null && SceneManagement.GetCurrentScene() == 3)
-        {
-            objInstance = this;
-            DontDestroyOnLoad(gameObject);
-        }
+        if (objInstance == null && SceneManagement.GetCurrentScene() == 3) objInstance = this;
         else if (objInstance != this) Destroy(gameObject);
     }
     void ResetPosition()

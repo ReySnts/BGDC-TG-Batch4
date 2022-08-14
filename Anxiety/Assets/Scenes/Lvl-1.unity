@@ -2063,7 +2063,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9aaf604d998b6643ab08a05bd55df44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightCursor: {fileID: 1669453419}
   spotLight: {fileID: 1259464387}
   sphere: {fileID: 571215759}
 --- !u!1 &314438138
@@ -2109,7 +2108,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a767de2094c89944ea29bcdff74a71ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightCursor: {fileID: 1669453419}
   spotLight: {fileID: 1259464387}
   sphere: {fileID: 571215759}
 --- !u!1 &319957082
@@ -2186,7 +2184,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c14cee382866b7a4e907d1c5c51d4318, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightCursor: {fileID: 1669453419}
   spotLight: {fileID: 1259464387}
   sphere: {fileID: 571215759}
 --- !u!1 &363790337 stripped
@@ -2301,7 +2298,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d4feebd6bf8ff04e846a82741e0fbfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightCursor: {fileID: 1669453419}
   spotLight: {fileID: 1259464387}
   sphere: {fileID: 571215759}
 --- !u!1 &382858364
@@ -2699,7 +2695,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 080f14ba0fc323341b62240179d0a3a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightCursor: {fileID: 1669453419}
   spotLight: {fileID: 1259464387}
   sphere: {fileID: 571215759}
 --- !u!1 &442002180
@@ -5123,36 +5118,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.0607507, y: 2.0607507, z: 1.9513538}
   m_Center: {x: -0.000030517578, y: 0, z: 0.18135858}
---- !u!1 &753742752
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 753742753}
-  m_Layer: 0
-  m_Name: Head
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &753742753
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 753742752}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.32, y: 0.775, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 954506295}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &796938093
 GameObject:
   m_ObjectHideFlags: 0
@@ -5308,7 +5273,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a6e9ab4a37dcd747915fecc327e4377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightCursor: {fileID: 1669453419}
   spotLight: {fileID: 1259464387}
   sphere: {fileID: 571215759}
 --- !u!1 &813842387
@@ -6437,7 +6401,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkPoints: []
-  checkPointName: 
   respawnPoint: {x: 0, y: 0, z: 0}
 --- !u!114 &954506292
 MonoBehaviour:
@@ -6532,11 +6495,10 @@ Transform:
   m_LocalPosition: {x: -163.95, y: 10.25814, z: 40}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 753742753}
+  - {fileID: 1878908739}
   - {fileID: 190527057}
   - {fileID: 932358851}
   - {fileID: 1634387406}
-  - {fileID: 1878908739}
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6605,7 +6567,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 18
+  field of view: 30
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -6630,8 +6592,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.13052616, y: 0, z: 0, w: 0.9914449}
-  m_LocalPosition: {x: -149.5, y: 17.12, z: 3.6999998}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -163.95, y: 10.546679, z: 34}
   m_LocalScale: {x: 7.2943773, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -8522,7 +8484,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5689c2dfdd829848bf6aa47a02d35ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightCursor: {fileID: 1669453419}
   spotLight: {fileID: 1259464387}
   sphere: {fileID: 571215759}
 --- !u!1 &1234084285 stripped
@@ -9524,7 +9485,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2b8e003340f4f74fbd96ff8326e0db4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightCursor: {fileID: 1669453419}
   spotLight: {fileID: 1259464387}
   sphere: {fileID: 571215759}
 --- !u!1 &1395820582
@@ -10570,7 +10530,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 174fc909a8e95fe49b45fa577da39e94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightCursor: {fileID: 1669453419}
   spotLight: {fileID: 1259464387}
   sphere: {fileID: 571215759}
 --- !u!1 &1572511968 stripped
@@ -10634,7 +10593,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3113b76ea9da3f4bb5e30e86fa5a9c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightCursor: {fileID: 1669453419}
   spotLight: {fileID: 1259464387}
   sphere: {fileID: 571215759}
 --- !u!1001 &1612849162
@@ -15191,7 +15149,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 954506295}
-  m_RootOrder: 4
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1902579972 stripped
 GameObject:
@@ -15736,7 +15694,6 @@ MonoBehaviour:
   pauseMenu: {fileID: 663364179}
   health: {fileID: 608038773}
   sounds: {fileID: 364101638}
-  lightCursor: {fileID: 0}
   ambience: {fileID: 1132155009}
 --- !u!1 &2005351267
 GameObject:
@@ -15911,7 +15868,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c3b71315454b5b4a89e41594daaaac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightCursor: {fileID: 1669453419}
   spotLight: {fileID: 1259464387}
   sphere: {fileID: 571215759}
 --- !u!1 &2040570888
@@ -16087,7 +16043,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 522b7f909e08043488644652f0c7db4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightCursor: {fileID: 1669453419}
   spotLight: {fileID: 1259464387}
   sphere: {fileID: 571215759}
 --- !u!1 &2086706658 stripped

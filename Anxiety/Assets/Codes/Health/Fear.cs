@@ -46,11 +46,13 @@ public class Fear : MonoBehaviour
     public bool hasDied = false; // for lightCursorClamp.
     void Awake()
     {
-        if (objInstance == null && SceneManagement.GetCurrentScene() != 1)
-        {
-            objInstance = this;
-            DontDestroyOnLoad(gameObject);
-        }
+        if (
+            objInstance == null && 
+            (
+                SceneManagement.GetCurrentScene() == 2 ||
+                SceneManagement.GetCurrentScene() == 3
+            )
+        ) objInstance = this;
         else if (objInstance != this) Destroy(gameObject);
     }
     void Start()
