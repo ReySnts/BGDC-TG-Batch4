@@ -18,7 +18,7 @@ public class Tutorial : StartLevel
     public Animator lightCursorFadingAnimControl = null;
     public Animator mushroomGlowingAnimControl = null;
 
-    protected override void SetUp()
+    protected override void DisableOtherObjects()
     {
         LightCursor.objInstance.enabled = 
         CheckPoint.objInstance.enabled = 
@@ -30,12 +30,18 @@ public class Tutorial : StartLevel
     }
     void Awake()
     {
-        if (objInstance == null && SceneManagement.GetCurrentScene() == 1)
-        {
-            objInstance = this;
-            transform.parent = null;
-        }
+        if (objInstance == null && SceneManagement.GetCurrentScene() == 1) objInstance = this;
         else if (objInstance != this) Destroy(gameObject);
+    }
+    void Start()
+    {
+        try
+        {
+            DisableSomeObjects();
+            SetDialogue();
+            SetGuideline();
+        }
+        catch { }
     }
     public void UnlockLightCursor()
     {

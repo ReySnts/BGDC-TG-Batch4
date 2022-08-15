@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-public abstract class StartLevel : MonoBehaviour
+public class StartLevel : MonoBehaviour
 {
-    Dialogue dialogue = null;
+    public GameObject guideline = null;
     [Header("Values")]
     bool onButtonPress = false;
     int dialogueIdx = 0;
@@ -14,7 +14,6 @@ public abstract class StartLevel : MonoBehaviour
     protected bool endDialogue = false;
     [Header("Guideline")]
     protected Queue<string> guidelineStorage = new Queue<string>();
-    Guideline guideline = null;
     protected bool onGuideHeld = false;
     [Header("Animators")]
     public Animator dialBoxAnimControl = null;
@@ -23,7 +22,7 @@ public abstract class StartLevel : MonoBehaviour
     public TextMeshProUGUI characterName = null;
     public TextMeshProUGUI dialogueSentence = null;
     public TextMeshProUGUI guidance = null;
-    protected abstract void SetUp();
+    protected virtual void DisableOtherObjects() { }
     protected IEnumerator AnimateEachLetter(string sentence)
     {
         dialogueSentence.text = "";
@@ -37,41 +36,40 @@ public abstract class StartLevel : MonoBehaviour
     {
         dialBoxAnimControl.SetBool("IsClosed", PauseMenu.objInstance.enabled = true);
         pressEnterAnimControl.SetBool("EndedDialogue", PlayerMovement.objInstance.enabled = endDialogue = true);
-        guidance.text = guidelineStorage.Dequeue();
+        try
+        {
+            guidance.text = guidelineStorage.Dequeue();
+        }
+        catch
+        {
+            guideline.SetActive(false);
+        }
     }
     protected void StartDialogue()
     {
         if (dialogueStorage.Count > 0)
         {
-            characterName.text = (dialogueIdx % 2 == 0) ? dialogue.characterName[0] : dialogue.characterName[1];
+            characterName.text = (dialogueIdx % 2 == 0) ? Dialogue.objInstance.characterName[0] : Dialogue.objInstance.characterName[1];
             StartCoroutine(AnimateEachLetter(dialogueStorage.Dequeue()));
         }
         else EndDialogue();
     }
-    void SetGuideline()
+    protected void SetGuideline()
     {
-        guideline = FindObjectOfType<Guideline>();
-        foreach (string sentence in guideline.sentences) guidelineStorage.Enqueue(sentence);
+        foreach (string sentence in Guideline.objInstance.sentences) guidelineStorage.Enqueue(sentence);
         guidance.text = guidelineStorage.Dequeue();
     }
     protected void SetDialogue()
     {
-        dialogue = FindObjectOfType<Dialogue>();
         dialogueStorage.Clear();
-        foreach (string sentence in dialogue.sentences) dialogueStorage.Enqueue(sentence);
+        foreach (string sentence in Dialogue.objInstance.sentences) dialogueStorage.Enqueue(sentence);
         StartDialogue();
     }
     protected void DisableSomeObjects()
     {
-        PauseMenu.objInstance.enabled = // Still Error because StartSceneDoor.
+        PauseMenu.objInstance.enabled = 
         PlayerMovement.objInstance.enabled = false;
-        SetUp();
-    }
-    protected void Start()
-    {
-        DisableSomeObjects();
-        SetDialogue();
-        SetGuideline();
+        DisableOtherObjects();
     }
     protected IEnumerator HoldPress()
     {

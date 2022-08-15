@@ -16,7 +16,8 @@ public class CheckPoint : MonoBehaviour
             objInstance == null && 
             (
                 SceneManagement.GetCurrentScene() == 1 || 
-                SceneManagement.GetCurrentScene() == 2
+                SceneManagement.GetCurrentScene() == 2 ||
+                SceneManagement.GetCurrentScene() == 3
             )
         ) objInstance = this;
         else if (objInstance != this) Destroy(gameObject);

@@ -8,6 +8,11 @@ public class SceneManagement : MonoBehaviour
         currSceneIdx = 0;
         SceneManager.LoadScene(currSceneIdx);
     }
+    public static void ToCredits()
+    {
+        currSceneIdx = 5;
+        SceneManager.LoadScene(currSceneIdx);
+    }
     public static int GetCurrentScene()
     {
         return SceneManager.GetActiveScene().buildIndex;
