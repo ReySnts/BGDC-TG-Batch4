@@ -152,7 +152,6 @@ public class Fear : MonoBehaviour
     void Respawn()
     {
         isDie = hasDied = false;
-        StopAllCoroutines();
         ReleasePlayer();
         HandWallsMovement.objInstance?.CheckFeeling(false);
         foreach (Death death in dieTraps) if (death != null) death.isTriggered = false;

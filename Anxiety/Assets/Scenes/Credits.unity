@@ -428,8 +428,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.00001049, y: -1717}
-  m_SizeDelta: {x: 575.9025, y: 1730.8081}
+  m_AnchoredPosition: {x: -0.00001049, y: -1425.6604}
+  m_SizeDelta: {x: 575.9025, y: 1148.1292}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &361746734
 MonoBehaviour:
@@ -500,28 +500,12 @@ MonoBehaviour:
 
 
 
-    ADVISOR
-    & IDEAS
+    GAME
+    TESTER
 
     Angeline Cecilia
 
-    Arkannabil Pratama
-
-    Gilang Kurniawan
-
-    Rifqi
-    Adam
-
-    Riska Natavianda
-
-
-
-    GAME TESTER
-
-    Angeline Cecilia
-
-    Rifqi
-    Adam'
+    Rifqi Adam'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 23ddabcff5b59ad4baaf6c5bf62da33b, type: 2}
   m_sharedMaterial: {fileID: 1572975615613307444, guid: 23ddabcff5b59ad4baaf6c5bf62da33b, type: 2}

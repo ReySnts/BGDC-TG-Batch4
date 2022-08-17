@@ -8,7 +8,8 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenu = null;
     public GameObject health = null;
     public GameObject sounds = null;
-    public AudioSource ambience = null;
+    public GameObject pauseUI = null;
+    public GameObject settingsUI = null;
     void CheckIfLevelUseHealth()
     {
         if (Tutorial.objInstance != null)
@@ -41,8 +42,8 @@ public class PauseMenu : MonoBehaviour
     }
     void Continue()
     {
+        CloseSettings();
         pauseMenu.SetActive(false);
-        ambience.Stop();
         sounds.SetActive(true);
         CheckIfLevelUseHealth();
         Time.timeScale = 1f;
@@ -69,10 +70,9 @@ public class PauseMenu : MonoBehaviour
             )
             {
                 objInstance = this;
-                transform.parent = null;
+                StartCoroutine(HoldStart());
             }
             else if (objInstance != this) Destroy(gameObject);
-            StartCoroutine(HoldStart());
         }
         catch
         {
@@ -82,6 +82,7 @@ public class PauseMenu : MonoBehaviour
     void Pause()
     {
         pauseMenu.SetActive(true);
+        CloseSettings();
         try
         {
             LightCursor.objInstance.enabled = false;
@@ -93,7 +94,6 @@ public class PauseMenu : MonoBehaviour
             health = null;
         }
         sounds.SetActive(false);
-        ambience.Play();
         Time.timeScale = 0f;
     }
     void Update()
@@ -111,5 +111,15 @@ public class PauseMenu : MonoBehaviour
                 isPaused = false;
             }
         }
+    }
+    public void OpenSettings()
+    {
+        settingsUI.SetActive(true);
+        pauseUI.SetActive(false);
+    }
+    public void CloseSettings()
+    {
+        pauseUI.SetActive(true);
+        settingsUI.SetActive(false);
     }
 }

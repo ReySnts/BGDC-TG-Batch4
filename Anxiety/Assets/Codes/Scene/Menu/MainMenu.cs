@@ -42,4 +42,12 @@ public class MainMenu : MonoBehaviour
             else menuUI.SetActive(false);
         }
     }
+    public void OpenBonus()
+    {
+        foreach (GameObject menuUI in menuUIList)
+        {
+            if (menuUI.name == "Bonus") menuUI.SetActive(true);
+            else menuUI.SetActive(false);
+        }
+    }
 }
