@@ -12,7 +12,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject settingsUI = null;
     void CheckIfLevelUseHealth()
     {
-        if (Tutorial.objInstance != null)
+        try
         {
             if (Tutorial.objInstance.isFadingFearMeter) Tutorial.objInstance.IntroduceFearMeter();
             else
@@ -26,8 +26,9 @@ public class PauseMenu : MonoBehaviour
                 }
             }
         }
-        else
+        catch
         {
+            Tutorial.objInstance = null;
             try
             {
                 health.SetActive(true);
@@ -40,8 +41,9 @@ public class PauseMenu : MonoBehaviour
             }
         }
     }
-    void Continue()
+    public void Continue()
     {
+        isPaused = false;
         CloseSettings();
         pauseMenu.SetActive(false);
         sounds.SetActive(true);
@@ -81,6 +83,7 @@ public class PauseMenu : MonoBehaviour
     }
     void Pause()
     {
+        isPaused = true;
         pauseMenu.SetActive(true);
         CloseSettings();
         try
@@ -100,16 +103,8 @@ public class PauseMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!isPaused)
-            {
-                Pause();
-                isPaused = true;
-            }
-            else
-            {
-                Continue();
-                isPaused = false;
-            }
+            if (!isPaused) Pause();
+            else Continue();
         }
     }
     public void OpenSettings()

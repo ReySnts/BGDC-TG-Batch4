@@ -22,17 +22,13 @@ public class CheckPoint : MonoBehaviour
         ) objInstance = this;
         else if (objInstance != this) Destroy(gameObject);
     }
-    void Start()
-    {
-        respawnPoint = transform.position;
-    }
-    void OnDisable()
-    {
-        isScriptEnabled = false;
-    }
     void OnEnable()
     {
         isScriptEnabled = true;
+    }
+    void Start()
+    {
+        respawnPoint = transform.position;
     }
     void OnTriggerEnter(Collider other)
     {
@@ -48,5 +44,9 @@ public class CheckPoint : MonoBehaviour
             }
         }
         catch { }
+    }
+    void OnDisable()
+    {
+        isScriptEnabled = false;
     }
 }

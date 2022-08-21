@@ -5,7 +5,8 @@ public class MainMenu : MonoBehaviour
     List<GameObject> menuUIList = new List<GameObject>();
     public void Play()
     {
-        SceneManagement.NextScene();
+        foreach (GameObject menuUI in menuUIList) menuUI.SetActive(false);
+        NextScene.objInstance.StartLoading("Level");
     }
     public void Credits()
     {

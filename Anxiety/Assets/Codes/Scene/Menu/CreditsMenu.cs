@@ -9,6 +9,7 @@ public class CreditsMenu : MonoBehaviour
     }
     void Start()
     {
+        Time.timeScale = 1f;
         StartCoroutine(HoldMainMenu());
     }
     void Update()

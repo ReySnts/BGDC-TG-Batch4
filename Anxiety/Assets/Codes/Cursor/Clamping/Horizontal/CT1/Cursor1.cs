@@ -2,7 +2,7 @@ public class Cursor1 : SetCursor
 {
     public override void SetClamp()
     {
-        lightCursor.leftXClamp = -164f;
+        lightCursor.leftXClamp = -169f;
         lightCursor.rightXClamp = -155f;
         lightCursor.downYClamp = 10f;
         lightCursor.upYClamp = 12.8f;

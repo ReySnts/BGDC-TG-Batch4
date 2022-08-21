@@ -24,7 +24,7 @@ public class Ending : StartLevel
     IEnumerator HoldCredits()
     {
         yield return new WaitForSeconds(5f);
-        SceneManagement.NextScene();
+        NextScene.objInstance.StartLoading("Level");
     }
     void OnTriggerEnter(Collider other)
     {
