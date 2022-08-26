@@ -12,6 +12,14 @@ public class MainMenu : MonoBehaviour
     {
         SceneManagement.ToCredits();
     }
+    public void AskToExit()
+    {
+        foreach(GameObject menuUI in menuUIList)
+        {
+            if (menuUI.name == "Exit") menuUI.SetActive(true);
+            else menuUI.SetActive(false);
+        }
+    }
     public void Exit()
     {
         Application.Quit();
@@ -26,6 +34,7 @@ public class MainMenu : MonoBehaviour
         menuUIList.Add(GameObject.Find("Main"));
         menuUIList.Add(GameObject.Find("Settings"));
         menuUIList.Add(GameObject.Find("Bonus"));
+        menuUIList.Add(GameObject.Find("Exit"));
     }
     public void OpenMain()
     {

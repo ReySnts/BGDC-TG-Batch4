@@ -5,11 +5,16 @@ public class PauseMenu : MonoBehaviour
     public static PauseMenu objInstance = null;
     [SerializeField] bool isPaused = false;
     [Header("References")]
-    public GameObject pauseMenu = null;
-    public GameObject health = null;
-    public GameObject sounds = null;
-    public GameObject pauseUI = null;
-    public GameObject settingsUI = null;
+    GameObject pauseMenu = null;
+    GameObject health = null;
+    GameObject sounds = null;
+    [Header("Pause UI")]
+    GameObject pause = null;
+    GameObject settings = null;
+    [Header("Ask Player")]
+    GameObject askPlayer = null;
+    GameObject restartLevel = null;
+    GameObject exitLevel = null;
     void CheckIfLevelUseHealth()
     {
         try
@@ -44,7 +49,6 @@ public class PauseMenu : MonoBehaviour
     public void Continue()
     {
         isPaused = false;
-        CloseSettings();
         pauseMenu.SetActive(false);
         sounds.SetActive(true);
         CheckIfLevelUseHealth();
@@ -55,37 +59,42 @@ public class PauseMenu : MonoBehaviour
         if (Fear.objInstance != null) Fear.willShowHealth = true;
         else Fear.willShowHealth = false;
     }
-    IEnumerator HoldStart()
+    void RegisterGameObject()
+    {
+        pauseMenu = GameObject.Find("PauseMenu");
+        health = GameObject.Find("Health");
+        sounds = GameObject.Find("Sounds");
+        pause = GameObject.Find("Pause");
+        settings = GameObject.Find("Settings");
+        askPlayer = GameObject.Find("AskPlayer");
+        restartLevel = GameObject.Find("RestartLevel");
+        exitLevel = GameObject.Find("ExitLevel");
+    }
+    IEnumerator HoldFrameAfterAwake()
     {
         yield return new WaitForEndOfFrame();
+        RegisterGameObject();
         CheckIfThereIsFearObject();
         Continue();
     }
     void Awake()
     {
-        try
+        if (
+            objInstance == null &&
+            SceneManagement.GetCurrentScene() != 0 &&
+            SceneManagement.GetCurrentScene() != 5
+        )
         {
-            if (
-                objInstance == null && 
-                SceneManagement.GetCurrentScene() != 0 &&
-                SceneManagement.GetCurrentScene() != 5
-            )
-            {
-                objInstance = this;
-                StartCoroutine(HoldStart());
-            }
-            else if (objInstance != this) Destroy(gameObject);
+            objInstance = this;
+            StartCoroutine(HoldFrameAfterAwake());
         }
-        catch
-        {
-            health = null;
-        }
+        else if (objInstance != this) Destroy(gameObject);
     }
     void Pause()
     {
         isPaused = true;
         pauseMenu.SetActive(true);
-        CloseSettings();
+        OpenPause();
         try
         {
             LightCursor.objInstance.enabled = false;
@@ -107,14 +116,41 @@ public class PauseMenu : MonoBehaviour
             else Continue();
         }
     }
+    public void OpenPause()
+    {
+        settings.SetActive(false);
+        askPlayer.SetActive(false);
+        pause.SetActive(true);
+    }
     public void OpenSettings()
     {
-        settingsUI.SetActive(true);
-        pauseUI.SetActive(false);
+        pause.SetActive(false);
+        askPlayer.SetActive(false);
+        settings.SetActive(true);
     }
-    public void CloseSettings()
+    public void AskPlayer(string askName)
     {
-        pauseUI.SetActive(true);
-        settingsUI.SetActive(false);
+        pause.SetActive(false);
+        settings.SetActive(false);
+        askPlayer.SetActive(true);
+        switch (askName)
+        {
+            case "RestartLevel":
+                AskToRestartLevel();
+                break;
+            case "ExitLevel":
+                AskToExitLevel();
+                break;
+        }
+    }
+    void AskToRestartLevel()
+    {
+        exitLevel.SetActive(false);
+        restartLevel.SetActive(true);
+    }
+    void AskToExitLevel()
+    {
+        restartLevel.SetActive(false);
+        exitLevel.SetActive(true);
     }
 }

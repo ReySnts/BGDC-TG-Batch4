@@ -7,14 +7,17 @@ public class NextScene : MonoBehaviour
     string colliderName = "Player";
     bool isTriggered = false;
     [Header("Loading")]
+    GameObject loadingBackground = null;
     GameObject loadingLevel = null;
+    GameObject loadingRestart = null;
     GameObject loadingMainMenu = null;
     GameObject loadingMeter = null;
     GameObject sounds = null;
     GameObject pauseMenu = null;
     GameObject tutorial = null;
-    public Slider loadingSlider = null;
+    [Header("Loading UI")]
     Canvas loadingCanvas = null;
+    Slider loadingSlider = null;
     void Awake()
     {
         if (objInstance == null && SceneManagement.GetCurrentScene() != 5) objInstance = this;
@@ -22,18 +25,13 @@ public class NextScene : MonoBehaviour
     }
     void OnEnable()
     {
-        SetLoading();
-        sounds = GameObject.Find("Sounds");
-        (loadingLevel = GameObject.Find("LoadingLevel")).SetActive(false);
-        try
-        {
-            (loadingMainMenu = GameObject.Find("LoadingMainMenu")).SetActive(false);
-            pauseMenu = GameObject.Find("PauseMenu");
-        }
-        catch
-        {
-            loadingMainMenu = pauseMenu = null;
-        }
+        #region Loading Slider
+        loadingSlider = GameObject.Find("LoadingSlider").GetComponent<Slider>();
+        loadingSlider.minValue = 0f;
+        loadingSlider.maxValue = 14f;
+        loadingSlider.wholeNumbers = true;
+        #endregion
+        #region Tutorial
         try
         {
             tutorial = GameObject.Find("Tutorial");
@@ -42,29 +40,26 @@ public class NextScene : MonoBehaviour
         {
             tutorial = null;
         }
-    }
-    void SetLoading()
-    {
-        loadingSlider.minValue = 0f;
-        loadingSlider.maxValue = 14f;
-        loadingSlider.wholeNumbers = true;
+        #endregion
+        #region Pause Menu
         try
         {
             loadingCanvas = GameObject.Find("Loading").GetComponent<Canvas>();
             loadingCanvas.sortingOrder = 1;
+            (loadingBackground = GameObject.Find("LoadingBackground")).SetActive(false);
+            (loadingRestart = GameObject.Find("LoadingRestart")).SetActive(false);
+            (loadingMainMenu = GameObject.Find("LoadingMainMenu")).SetActive(false);
+            (loadingMeter = GameObject.Find("LoadingMeter")).SetActive(false);
+            pauseMenu = GameObject.Find("PauseMenu");
         }
         catch
         {
             loadingCanvas = null;
+            loadingBackground = loadingRestart = loadingMainMenu = loadingMeter = pauseMenu = null;
         }
-        try
-        {
-            (loadingMeter = GameObject.Find("LoadingMeter")).SetActive(false);
-        }
-        catch
-        {
-            loadingMeter = null;
-        }
+        #endregion
+        sounds = GameObject.Find("Sounds");
+        (loadingLevel = GameObject.Find("LoadingLevel")).SetActive(false);
     }
     void OnTriggerEnter(Collider other)
     {
@@ -74,12 +69,17 @@ public class NextScene : MonoBehaviour
             StartLoading("Level");
         }
     }
-    public void QuitGame()
+    public void RestartLevel()
+    {
+        StartLoading("Restart");
+    }
+    public void ExitLevel()
     {
         StartLoading("MainMenu");
     }
     public void StartLoading(string loadingName)
     {
+        #region Tutorial
         try
         {
             tutorial.SetActive(false);
@@ -88,18 +88,22 @@ public class NextScene : MonoBehaviour
         {
             tutorial = null;
         }
+        #endregion
+        #region Pause Menu
         try
         {
             PauseMenu.objInstance.enabled = false;
             pauseMenu.SetActive(false);
             Time.timeScale = 1f;
+            loadingBackground.SetActive(true);
             loadingMeter.SetActive(true);
         }
         catch
         {
             PauseMenu.objInstance = null;
-            pauseMenu = loadingMeter = null;
+            pauseMenu = loadingBackground = loadingMeter = null;
         }
+        #endregion
         TurnOnUI(loadingName);
         sounds.SetActive(false);
         StartCoroutine(Loading(loadingName, 2f));
@@ -110,6 +114,9 @@ public class NextScene : MonoBehaviour
         {
             case "Level":
                 loadingLevel.SetActive(true);
+                break;
+            case "Restart":
+                loadingRestart.SetActive(true);
                 break;
             case "MainMenu":
                 loadingMainMenu.SetActive(true);
@@ -142,6 +149,9 @@ public class NextScene : MonoBehaviour
         {
             case "Level":
                 SceneManagement.NextScene();
+                break;
+            case "Restart":
+                SceneManagement.Restart();
                 break;
             case "MainMenu":
                 SceneManagement.ToMainMenu();
