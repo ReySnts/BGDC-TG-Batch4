@@ -7,10 +7,10 @@ public abstract class DieAfterJump : Death
     {
         if (!isTriggered && other.name == colliderName)
         {
+            isTriggered = true;
             SetRestartTime();
             Fear.objInstance.DieAfterJump();
             dieAfterJumpSound.Play();
-            isTriggered = true;
             StartCoroutine(Fear.objInstance.FadeIn(restartTime));
         }
     }

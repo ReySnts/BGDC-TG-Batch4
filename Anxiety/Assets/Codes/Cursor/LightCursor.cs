@@ -23,7 +23,11 @@ public class LightCursor : MonoBehaviour
             SceneManagement.GetCurrentScene() != 0 &&
             SceneManagement.GetCurrentScene() != 4 && 
             SceneManagement.GetCurrentScene() != 5
-        ) objInstance = SetCursor.lightCursor = this;
+        )
+        {
+            objInstance = this;
+            if (SceneManagement.GetCurrentScene() == 2) SetCursor.lightCursor = objInstance;
+        }
         else if (objInstance != this) Destroy(gameObject);
     }
     void Update()

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class Fear : MonoBehaviour
 {
     public static Fear objInstance = null;
+    #region Booleans
     [Header("Booleans")]
     public static bool willShowHealth = false;
     public bool isDieAfterShock = false;
@@ -12,6 +13,7 @@ public class Fear : MonoBehaviour
     bool isDieAfterJump = false;
     bool isDieAfterEmptyMeter = false;
     bool isDieAfterShockBecauseSpike = false;
+    #endregion
     [Header("Slider")]
     public Slider fearMeter = null;
     public float maxFearValue = 100f;
@@ -19,8 +21,9 @@ public class Fear : MonoBehaviour
     [Header("Dark Damages")]
     [SerializeField] float darkDamage = 5f;
     [SerializeField] float darkDamageCooldown = 0.5f;
+    #region QTE
     [Header("QTE")]
-    public GameObject qTEImage = null;
+    public GameObject qTE = null;
     public Image qTEFill = null;
     public bool hasDoneQTE = false;
     bool hasStartedQTE = false;
@@ -31,17 +34,18 @@ public class Fear : MonoBehaviour
     [SerializeField] float handQTEDmgCooldown = 0.1f;
     float lastTimeDamaged = 0f;
     float currentTime = 0f;
+    #endregion
+    #region Die Effects
     [Header("Die Effects")]
     public Animator playerControlAnim = null;
     public Animator backgroundControl = null;
     public PlayableDirector dieSoundTimeline = null;
     public AudioSource shockSound = null;
     public GameObject playerMoveSounds = null;
-    public delegate void ResetPosition();
-    public ResetPosition resetHandWallsPosition = null;
     float fadeOutTime = 2f;
+    #endregion
     [Header("Checkpoint")]
-    public GameObject player = null;
+    GameObject player = null;
     public Death[] dieTraps = new Death[40];
     public bool hasDied = false; // for lightCursorClamp.
     void Awake()
@@ -55,79 +59,50 @@ public class Fear : MonoBehaviour
         ) objInstance = this;
         else if (objInstance != this) Destroy(gameObject);
     }
+    void OnEnable()
+    {
+        player = GameObject.Find("Player");
+    }
     void Start()
     {
+        fearMeter.value = fearMeter.minValue = minFearValue;
+        fearMeter.maxValue = maxFearValue;
+        fearMeter.interactable = false;
+        #region Setup QTE
         try
         {
-            qTEFill.fillAmount = fearMeter.value = fearMeter.minValue = minFearValue;
-            fearMeter.maxValue = maxFearValue;
-            fearMeter.interactable = false;
-            qTEImage.SetActive(false);
+            qTEFill.fillAmount = minFearValue;
+            qTE.SetActive(false);
         }
         catch
         {
-            qTEImage = null;
             qTEFill = null;
+            qTE = null;
         }
+        #endregion
     }
     void ReleasePlayer()
     {
+        #region Setup QTE
         try
         {
             qTEFill.fillAmount = 0f;
-            qTEImage.SetActive(false);
+            qTE.SetActive(false);
         }
         catch
         {
-            qTEImage = null;
             qTEFill = null;
+            qTE = null;
         }
+        #endregion
         PlayerMovement.objInstance.rigidBody.isKinematic = false;
         PlayerMovement.objInstance.enabled = PlayerMovement.objInstance.rigidBody.useGravity = true;
         playerMoveSounds.SetActive(true);
-    }
-    void EffectByHandQTE()
-    {
-        if (Time.time - lastTimeDamaged < handQTEDmgCooldown) return;
-        lastTimeDamaged = Time.time;
-        fearMeter.value += handQTEDmg;
     }
     public IEnumerator ResetHand(float resetHandTime)
     {
         yield return new WaitForSeconds(resetHandTime);
         HandWall.turnOnMagnet = HandWall.hasGrabbedPlayer = hasDoneQTE = hasStartedQTE = false;
-    }
-    void DieAfterShock()
-    {
-        isDieAfterShock = hasDoneQTE = true;
-        playerControlAnim.SetBool("IsDieAfterShock", isDieAfterShock);
-        shockSound.Play();
-    }
-    void StartQTE()
-    {
-        if (!hasStartedQTE)
-        {
-            qTEImage.SetActive(true);
-            hasStartedQTE = true;
-        }
-        if (fearMeter.value == maxFearValue) DieAfterShock();
-        else if (qTEFill.fillAmount == 1f)
-        {
-            ReleasePlayer();
-            hasDoneQTE = true;
-            StartCoroutine(ResetHand(1f));
-        }
-        else if (Input.GetKeyDown(KeyCode.Return)) qTEFill.fillAmount += qTEFillAdd;
-        else if (currentTime >= qTEFillDiffTime)
-        {
-            qTEFill.fillAmount += qTEFillDiff;
-            currentTime = 0f;
-        }
-        else
-        {
-            currentTime += Time.deltaTime;
-            EffectByHandQTE();
-        }
     }
     void SetDie()
     {
@@ -135,7 +110,6 @@ public class Fear : MonoBehaviour
         PlayerMovement.objInstance.enabled = false;
         playerMoveSounds.SetActive(false);
         isDie = true;
-        HandWallsMovement.objInstance?.CheckFeeling(true);
     }
     public void DieAfterShockBecauseSpike()
     {
@@ -149,28 +123,23 @@ public class Fear : MonoBehaviour
         playerControlAnim.SetBool("IsDieAfterJump", isDieAfterJump);
         SetDie();
     }
-    void Respawn()
-    {
-        isDie = hasDied = false;
-        ReleasePlayer();
-        HandWallsMovement.objInstance?.CheckFeeling(false);
-        foreach (Death death in dieTraps) if (death != null) death.isTriggered = false;
-    }
     IEnumerator HoldRespawn()
     {
         yield return new WaitForSeconds(fadeOutTime);
         backgroundControl.SetBool("IsFadeOut", false);
-        Respawn();
+        #region Respawn
+        isDie = hasDied = false;
+        ReleasePlayer();
+        foreach (Death death in dieTraps) if (death != null) death.isTriggered = false;
+        #endregion
     }
-    void ResetAnimForRespawn()
+    IEnumerator FadeOut()
     {
-        playerControlAnim.SetFloat("WalkSpeed", 0f);
-        playerControlAnim.SetFloat("ZWalkSpeed", 0f);
-        playerControlAnim.SetBool("IsJumping", false);
-        playerControlAnim.SetBool("IsCrouching", false);
-    }
-    void CheckCauseOfDeath()
-    {
+        yield return new WaitForSeconds(fadeOutTime);
+        #region Set Respawn
+        fearMeter.value = minFearValue;
+        player.transform.position = CheckPoint.objInstance.respawnPoint;
+        #region Check Cause of Death
         if (isDieAfterShock)
         {
             isDieAfterShock = HandWall.startPulling = HandWall.hasPulled = false;
@@ -191,20 +160,25 @@ public class Fear : MonoBehaviour
             isDieAfterEmptyMeter = false;
             playerControlAnim.SetBool("IsDieAfterEmptyMeter", isDieAfterEmptyMeter);
         }
-    }
-    void SetRespawn()
-    {
-        fearMeter.value = minFearValue;
-        player.transform.position = CheckPoint.objInstance.respawnPoint;
-        CheckCauseOfDeath();
-        ResetAnimForRespawn();
-        resetHandWallsPosition?.Invoke();
+        #endregion
+        #region Reset Animations for Respawn
+        playerControlAnim.SetFloat("WalkSpeed", 0f);
+        playerControlAnim.SetFloat("ZWalkSpeed", 0f);
+        playerControlAnim.SetBool("IsJumping", false);
+        playerControlAnim.SetBool("IsCrouching", false);
+        #endregion
+        #region Reset HandWallsPos
+        try
+        {
+            HandWallsMovement.objInstance.transform.position = HandWallsMovement.objInstance.initialPosition;
+        }
+        catch
+        {
+            HandWallsMovement.objInstance = null;
+        }
+        #endregion
         hasDied = true;
-    }
-    IEnumerator FadeOut()
-    {
-        yield return new WaitForSeconds(fadeOutTime);
-        SetRespawn();
+        #endregion
         backgroundControl.SetBool("IsFadeIn", false);
         backgroundControl.SetBool("IsFadeOut", true);
         StartCoroutine(HoldRespawn());
@@ -218,31 +192,71 @@ public class Fear : MonoBehaviour
     {
         yield return new WaitForSeconds(fadeInTime);
         backgroundControl.SetBool("IsFadeIn", true);
-        StartCoroutine(HandReturn());
         StartCoroutine(FadeOut());
-    }
-    void DieAfterEmptyMeter()
-    {
-        StartCoroutine(FadeIn(3f));
-        isDieAfterEmptyMeter = true;
-        playerControlAnim.SetBool("IsDieAfterEmptyMeter", isDieAfterEmptyMeter);
-        dieSoundTimeline.Play();
-        SetDie();
-    }
-    void EffectByLight()
-    {
-        if (!isDie && fearMeter.value == maxFearValue) DieAfterEmptyMeter();
-        else
-        {
-            if (Time.time - lastTimeDamaged < darkDamageCooldown) return;
-            lastTimeDamaged = Time.time;
-            if (GetLight.outOfLight) fearMeter.value += darkDamage;
-            else if (fearMeter.value < maxFearValue) fearMeter.value -= darkDamage;
-        }
+        if (HandWallsMovement.objInstance != null) StartCoroutine(HandReturn());
     }
     void Update()
     {
-        if (!HandWall.turnOnMagnet) EffectByLight();
-        else if (HandWall.hasGrabbedPlayer && !hasDoneQTE) StartQTE();
+        if (!HandWall.turnOnMagnet)
+        {
+            #region Effect By Light
+            if (!isDie && fearMeter.value == maxFearValue)
+            {
+                #region Die After Empty Meter
+                StartCoroutine(FadeIn(3f));
+                isDieAfterEmptyMeter = true;
+                playerControlAnim.SetBool("IsDieAfterEmptyMeter", isDieAfterEmptyMeter);
+                dieSoundTimeline.Play();
+                SetDie();
+                #endregion
+            }
+            else
+            {
+                if (Time.time - lastTimeDamaged < darkDamageCooldown) return;
+                lastTimeDamaged = Time.time;
+                if (GetLight.outOfLight) fearMeter.value += darkDamage;
+                else if (fearMeter.value < maxFearValue) fearMeter.value -= darkDamage;
+            }
+            #endregion
+        }
+        else if (HandWall.hasGrabbedPlayer && !hasDoneQTE)
+        {
+            #region Start QTE
+            if (!hasStartedQTE)
+            {
+                qTE.SetActive(true);
+                hasStartedQTE = true;
+            }
+            if (fearMeter.value == maxFearValue)
+            {
+                #region Die After Shock
+                isDieAfterShock = hasDoneQTE = true;
+                playerControlAnim.SetBool("IsDieAfterShock", isDieAfterShock);
+                shockSound.Play();
+                #endregion
+            }
+            else if (qTEFill.fillAmount == 1f)
+            {
+                ReleasePlayer();
+                hasDoneQTE = true;
+                StartCoroutine(ResetHand(1f));
+            }
+            else if (Input.GetKeyDown(KeyCode.Return)) qTEFill.fillAmount += qTEFillAdd;
+            else if (currentTime >= qTEFillDiffTime)
+            {
+                qTEFill.fillAmount += qTEFillDiff;
+                currentTime = 0f;
+            }
+            else
+            {
+                currentTime += Time.deltaTime;
+                #region Effect By Hand QTE
+                if (Time.time - lastTimeDamaged < handQTEDmgCooldown) return;
+                lastTimeDamaged = Time.time;
+                fearMeter.value += handQTEDmg;
+                #endregion
+            }
+            #endregion
+        }
     }
 }

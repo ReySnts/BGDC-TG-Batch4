@@ -6,10 +6,10 @@ public class DieAfterShock : Death
     {
         if (!isTriggered && other.name == colliderName)
         {
+            isTriggered = true;
             restartTime = 1.5f;
             Fear.objInstance.DieAfterShockBecauseSpike();
             dieAfterShockSound.Play();
-            isTriggered = true;
             StartCoroutine(Fear.objInstance.FadeIn(restartTime));
         }
     }

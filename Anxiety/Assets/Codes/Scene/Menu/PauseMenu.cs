@@ -6,7 +6,6 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] bool isPaused = false;
     [Header("References")]
     GameObject pauseMenu = null;
-    GameObject health = null;
     GameObject sounds = null;
     [Header("Pause UI")]
     GameObject pause = null;
@@ -19,6 +18,7 @@ public class PauseMenu : MonoBehaviour
     {
         try
         {
+            #region Tutorial
             if (Tutorial.objInstance.isFadingFearMeter) Tutorial.objInstance.IntroduceFearMeter();
             else
             {
@@ -30,20 +30,31 @@ public class PauseMenu : MonoBehaviour
                     if (Tutorial.objInstance.hasTurnedOnLightCursor) Tutorial.objInstance.UnlockLightCursor();
                 }
             }
+            #endregion
         }
         catch
         {
             Tutorial.objInstance = null;
+            #region Enable Light Cursor
             try
             {
-                health.SetActive(true);
                 LightCursor.objInstance.enabled = true;
             }
             catch
             {
-                health = null;
                 LightCursor.objInstance = null;
             }
+            #endregion
+            #region Enable Health
+            try
+            {
+                Fear.objInstance.enabled = true;
+            }
+            catch
+            {
+                Fear.objInstance = null;
+            }
+            #endregion
         }
     }
     public void Continue()
@@ -54,27 +65,22 @@ public class PauseMenu : MonoBehaviour
         CheckIfLevelUseHealth();
         Time.timeScale = 1f;
     }
-    void CheckIfThereIsFearObject()
+    IEnumerator HoldFrameAfterAwake()
     {
-        if (Fear.objInstance != null) Fear.willShowHealth = true;
-        else Fear.willShowHealth = false;
-    }
-    void RegisterGameObject()
-    {
+        yield return new WaitForEndOfFrame();
+        #region Register Game Object
         pauseMenu = GameObject.Find("PauseMenu");
-        health = GameObject.Find("Health");
         sounds = GameObject.Find("Sounds");
         pause = GameObject.Find("Pause");
         settings = GameObject.Find("Settings");
         askPlayer = GameObject.Find("AskPlayer");
         restartLevel = GameObject.Find("RestartLevel");
         exitLevel = GameObject.Find("ExitLevel");
-    }
-    IEnumerator HoldFrameAfterAwake()
-    {
-        yield return new WaitForEndOfFrame();
-        RegisterGameObject();
-        CheckIfThereIsFearObject();
+        #endregion
+        #region Check If There Is Fear Object
+        if (Fear.objInstance != null) Fear.willShowHealth = true;
+        else Fear.willShowHealth = false;
+        #endregion
         Continue();
     }
     void Awake()
@@ -93,20 +99,30 @@ public class PauseMenu : MonoBehaviour
     void Pause()
     {
         isPaused = true;
+        Time.timeScale = 0f;
         pauseMenu.SetActive(true);
         OpenPause();
+        #region Disable Health
+        try
+        {
+            Fear.objInstance.enabled = false;
+        }
+        catch
+        {
+            Fear.objInstance = null;
+        }
+        #endregion
+        #region Disable Light Cursor
         try
         {
             LightCursor.objInstance.enabled = false;
-            health.SetActive(false);
         }
         catch
         {
             LightCursor.objInstance = null;
-            health = null;
         }
+        #endregion
         sounds.SetActive(false);
-        Time.timeScale = 0f;
     }
     void Update()
     {

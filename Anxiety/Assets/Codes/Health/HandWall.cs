@@ -7,7 +7,6 @@ public class HandWall : MonoBehaviour
     public Animator boneAnimControl = null;
     public Transform player = null;
     public Transform handMagnet = null;
-    public static event Action<bool> stopMovement = null;
     string colliderName = "Player";
     [Header("Booleans")]
     public static bool turnOnMagnet = false;
@@ -15,7 +14,6 @@ public class HandWall : MonoBehaviour
     public static bool startPulling = false;
     public static bool hasPulled = false;
     bool isPlayerFelt = false;
-    bool hasStopped = false;
     bool isAttHeld = false;
     [Header("Floats")]
     static float lastGrabbedTime = 0f;
@@ -92,23 +90,9 @@ public class HandWall : MonoBehaviour
         else if (!hasGrabbedPlayer) Grab();
         else if (Fear.objInstance.isDieAfterShock) Pull();
     }
-    void CheckFeelPlayer()
-    {
-        if (!hasStopped && isPlayerFelt)
-        {
-            stopMovement?.Invoke(true);
-            hasStopped = true;
-        }
-        else if (hasStopped && !isPlayerFelt)
-        {
-            stopMovement?.Invoke(false);
-            hasStopped = false;
-        }
-    }
     void Update()
     {
         handMagnetPosition = handMagnet.position + Vector3.forward * zDiff;
-        CheckFeelPlayer();
         if (!Fear.objInstance.isDie && isPlayerFelt) Hunt();
         SetAnim();
     }

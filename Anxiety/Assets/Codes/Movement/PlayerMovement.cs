@@ -67,10 +67,10 @@ public class PlayerMovement : MonoBehaviour
     }
     void Start()
     {
-        rigidBody = this.GetComponent<Rigidbody>();
-        playerControlAnim = this.GetComponentInChildren<Animator>();
-        boxCol = this.GetComponent<BoxCollider>();
-        capsCol = this.GetComponent<CapsuleCollider>();
+        rigidBody = GetComponent<Rigidbody>();
+        playerControlAnim = GetComponentInChildren<Animator>();
+        boxCol = GetComponent<BoxCollider>();
+        capsCol = GetComponent<CapsuleCollider>();
         spriteRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
         SetCollider();
     }
