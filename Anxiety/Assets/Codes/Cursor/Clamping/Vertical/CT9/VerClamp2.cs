@@ -9,7 +9,7 @@ public class VerClamp2 : VerClamp
     {
         if (
             Fear.objInstance.hasDied && 
-            CheckPoint.checkPointName == "Moshrum (2)"
+            CheckPoint.objInstance.checkPointName == CheckPoint.objInstance.colliderName + " (2)"
         ) TurnOnLeftCursor();
     }
 }

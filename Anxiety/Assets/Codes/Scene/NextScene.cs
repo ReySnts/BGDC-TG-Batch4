@@ -4,8 +4,9 @@ using UnityEngine.UI;
 public class NextScene : MonoBehaviour
 {
     public static NextScene objInstance = null;
-    string colliderName = "Player";
+    public bool hasStartedLoading = false;
     bool isTriggered = false;
+    readonly string colliderName = "Player";
     [Header("Loading")]
     GameObject loadingBackground = null;
     GameObject loadingLevel = null;
@@ -79,7 +80,8 @@ public class NextScene : MonoBehaviour
     }
     public void StartLoading(string loadingName)
     {
-        #region Tutorial
+        hasStartedLoading = true;
+        #region Disable Tutorial
         try
         {
             tutorial.SetActive(false);
@@ -89,7 +91,7 @@ public class NextScene : MonoBehaviour
             tutorial = null;
         }
         #endregion
-        #region Pause Menu
+        #region Disable Pause Menu
         try
         {
             PauseMenu.objInstance.enabled = false;
@@ -103,6 +105,25 @@ public class NextScene : MonoBehaviour
             PauseMenu.objInstance = null;
             pauseMenu = loadingBackground = loadingMeter = null;
         }
+        #endregion
+        #region Disable Health
+        try
+        {
+            Fear.objInstance.enabled = false;
+        }
+        catch
+        {
+            Fear.objInstance = null;
+        }
+        #endregion
+        #region Disable HandWalls
+        try
+        {
+            HandWall.hasGrabbedPlayer = HandWall.hasPulled = HandWall.startPulling = HandWall.turnOnMagnet = false;
+            HandWall.lastGrabbedTime = 0f;
+            GameObject.Find("HandWalls").SetActive(false);
+        }
+        catch { }
         #endregion
         TurnOnUI(loadingName);
         sounds.SetActive(false);

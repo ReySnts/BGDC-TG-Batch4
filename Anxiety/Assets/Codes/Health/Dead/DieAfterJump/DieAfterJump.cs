@@ -10,7 +10,11 @@ public abstract class DieAfterJump : Death
             isTriggered = true;
             SetRestartTime();
             Fear.objInstance.DieAfterJump();
-            dieAfterJumpSound.Play();
+            try
+            {
+                dieAfterJumpSound.Play();
+            }
+            catch { }
             StartCoroutine(Fear.objInstance.FadeIn(restartTime));
         }
     }

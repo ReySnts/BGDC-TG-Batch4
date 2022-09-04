@@ -4,7 +4,7 @@ public class HandWallsMovement : MonoBehaviour
     public static HandWallsMovement objInstance = null;
     [Range(0f, 6f)] [SerializeField] float moveSpeed = 2f;
     public Vector3 initialPosition = Vector3.zero;
-    string colliderName = "Player";
+    readonly string colliderName = "Player";
     bool isPlayerFelt = false;
     void Awake()
     {

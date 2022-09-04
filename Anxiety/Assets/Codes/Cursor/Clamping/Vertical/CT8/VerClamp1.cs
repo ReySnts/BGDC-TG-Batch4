@@ -8,8 +8,8 @@ public class VerClamp1 : VerClamp
     void Update()
     {
         if (
-            Fear.objInstance.hasDied && 
-            CheckPoint.checkPointName == "Moshrum (1)"
+            Fear.objInstance.hasDied &&
+            CheckPoint.objInstance.checkPointName == CheckPoint.objInstance.colliderName + " (1)"
         ) TurnOnLeftCursor();
     }
 }

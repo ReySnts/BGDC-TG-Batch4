@@ -17,21 +17,21 @@ public class Fear : MonoBehaviour
     [Header("Slider")]
     public Slider fearMeter = null;
     public float maxFearValue = 100f;
-    [SerializeField] float minFearValue = 0f;
+    readonly float minFearValue = 0f;
     [Header("Dark Damages")]
-    [SerializeField] float darkDamage = 5f;
-    [SerializeField] float darkDamageCooldown = 0.5f;
+    [SerializeField] readonly float darkDamage = 5f;
+    [SerializeField] readonly float darkDamageCooldown = 0.5f;
     #region QTE
     [Header("QTE")]
     public GameObject qTE = null;
     public Image qTEFill = null;
     public bool hasDoneQTE = false;
     bool hasStartedQTE = false;
-    [Range(0f, 1f)] [SerializeField] float qTEFillAdd = 0.125f;
-    [SerializeField] float qTEFillDiffTime = 0.1f;
-    [Range(-1f, 0f)] [SerializeField] float qTEFillDiff = -0.01f;
-    [SerializeField] float handQTEDmg = 0.5f;
-    [SerializeField] float handQTEDmgCooldown = 0.1f;
+    [Range(0f, 1f)] [SerializeField] readonly float qTEFillAdd = 0.125f;
+    [SerializeField] readonly float qTEFillDiffTime = 0.1f;
+    [Range(-1f, 0f)] [SerializeField] readonly float qTEFillDiff = -0.01f;
+    [SerializeField] readonly float handQTEDmg = 0.5f;
+    [SerializeField] readonly float handQTEDmgCooldown = 0.1f;
     float lastTimeDamaged = 0f;
     float currentTime = 0f;
     #endregion
@@ -42,12 +42,15 @@ public class Fear : MonoBehaviour
     public PlayableDirector dieSoundTimeline = null;
     public AudioSource shockSound = null;
     public GameObject playerMoveSounds = null;
-    float fadeOutTime = 2f;
+    readonly float fadeOutTime = 2f;
     #endregion
     [Header("Checkpoint")]
-    GameObject player = null;
+    public GameObject player = null;
     public Death[] dieTraps = new Death[40];
     public bool hasDied = false; // for lightCursorClamp.
+    int currCheckpointIdx = 0;
+    int currTotalCheckpoint = 0;
+    Vector3 closestRespawnPoint = Vector3.zero;
     void Awake()
     {
         if (
@@ -59,16 +62,8 @@ public class Fear : MonoBehaviour
         ) objInstance = this;
         else if (objInstance != this) Destroy(gameObject);
     }
-    void OnEnable()
+    void ResetQTE()
     {
-        player = GameObject.Find("Player");
-    }
-    void Start()
-    {
-        fearMeter.value = fearMeter.minValue = minFearValue;
-        fearMeter.maxValue = maxFearValue;
-        fearMeter.interactable = false;
-        #region Setup QTE
         try
         {
             qTEFill.fillAmount = minFearValue;
@@ -79,22 +74,19 @@ public class Fear : MonoBehaviour
             qTEFill = null;
             qTE = null;
         }
+    }
+    void Start()
+    {
+        #region Setup Fear Meter
+        fearMeter.value = fearMeter.minValue = minFearValue;
+        fearMeter.maxValue = maxFearValue;
+        fearMeter.interactable = false;
         #endregion
+        ResetQTE();
     }
     void ReleasePlayer()
     {
-        #region Setup QTE
-        try
-        {
-            qTEFill.fillAmount = 0f;
-            qTE.SetActive(false);
-        }
-        catch
-        {
-            qTEFill = null;
-            qTE = null;
-        }
-        #endregion
+        ResetQTE();
         PlayerMovement.objInstance.rigidBody.isKinematic = false;
         PlayerMovement.objInstance.enabled = PlayerMovement.objInstance.rigidBody.useGravity = true;
         playerMoveSounds.SetActive(true);
@@ -130,7 +122,7 @@ public class Fear : MonoBehaviour
         #region Respawn
         isDie = hasDied = false;
         ReleasePlayer();
-        foreach (Death death in dieTraps) if (death != null) death.isTriggered = false;
+        foreach (Death death in dieTraps) if (death != null) death.isCollided = death.isTriggered = false;
         #endregion
     }
     IEnumerator FadeOut()
@@ -138,8 +130,15 @@ public class Fear : MonoBehaviour
         yield return new WaitForSeconds(fadeOutTime);
         #region Set Respawn
         fearMeter.value = minFearValue;
-        player.transform.position = CheckPoint.objInstance.respawnPoint;
-        #region Check Cause of Death
+        #region Reset Player Position
+        currTotalCheckpoint = CheckPoint.objInstance.respawnPoints.Count;
+        closestRespawnPoint = CheckPoint.objInstance.respawnPoints[0];
+        for (currCheckpointIdx = 1; currCheckpointIdx < currTotalCheckpoint; currCheckpointIdx++)
+            if (closestRespawnPoint.x < CheckPoint.objInstance.respawnPoints[currCheckpointIdx].x)
+                closestRespawnPoint = CheckPoint.objInstance.respawnPoints[currCheckpointIdx];
+        player.transform.position = closestRespawnPoint;
+        #endregion
+        #region Check Cause Of Death
         if (isDieAfterShock)
         {
             isDieAfterShock = HandWall.startPulling = HandWall.hasPulled = false;
@@ -161,13 +160,13 @@ public class Fear : MonoBehaviour
             playerControlAnim.SetBool("IsDieAfterEmptyMeter", isDieAfterEmptyMeter);
         }
         #endregion
-        #region Reset Animations for Respawn
+        #region Reset Animations For Respawn
         playerControlAnim.SetFloat("WalkSpeed", 0f);
         playerControlAnim.SetFloat("ZWalkSpeed", 0f);
         playerControlAnim.SetBool("IsJumping", false);
         playerControlAnim.SetBool("IsCrouching", false);
         #endregion
-        #region Reset HandWallsPos
+        #region Reset HandWalls Position
         try
         {
             HandWallsMovement.objInstance.transform.position = HandWallsMovement.objInstance.initialPosition;

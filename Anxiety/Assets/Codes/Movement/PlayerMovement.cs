@@ -80,7 +80,11 @@ public class PlayerMovement : MonoBehaviour
         z = Input.GetAxis("Vertical");
         if (!isPressed && (x != 0f || z != 0f))
         {
-            walkSound.Play();
+            try
+            {
+                walkSound.Play();
+            }
+            catch { }
             isPressed = true;
         }
         else if (x == 0f && z == 0f)
@@ -116,7 +120,11 @@ public class PlayerMovement : MonoBehaviour
         rigidBody.velocity = new Vector3(x * walkSpeed * 0.5f, 0f, z * walkSpeed * 0.5f);
         if (!isCrouch)
         {
-            crouchSound.Play();
+            try
+            {
+                crouchSound.Play();
+            }
+            catch { }
             isCrouch = true;
         }
         runSound.Stop();
@@ -126,7 +134,11 @@ public class PlayerMovement : MonoBehaviour
         rigidBody.velocity = new Vector3(x * walkSpeed * 2f, 0f, z * walkSpeed * 2f);
         if (!isRun && (x != 0f || z != 0f))
         {
-            runSound.Play();
+            try
+            {
+                runSound.Play();
+            }
+            catch { }
             isRun = true;
         }
         walkSound.Stop();
@@ -134,12 +146,20 @@ public class PlayerMovement : MonoBehaviour
     void StopRun()
     {
         runSound.Stop();
-        walkSound.Play();
+        try
+        {
+            walkSound.Play();
+        }
+        catch { }
         isRun = false;
     }
     void StopCrouch()
     {
-        crouchSound.Play();
+        try
+        {
+            crouchSound.Play();
+        }
+        catch { }
         isCrouch = false;
     }
     void SetNormal()
@@ -182,7 +202,11 @@ public class PlayerMovement : MonoBehaviour
     }
     void StartLandAfterJump()
     {
-        jumpSound.Play();
+        try
+        {
+            jumpSound.Play();
+        }
+        catch { }
         startJump = false;
         startLand = true;
     }
@@ -219,7 +243,11 @@ public class PlayerMovement : MonoBehaviour
     }
     public void Landing()
     {
-        landSound.Play();
+        try
+        {
+            landSound.Play();
+        }
+        catch { }
         playerControlAnim.SetBool("IsJumping", false);
         startLand = false;
     }

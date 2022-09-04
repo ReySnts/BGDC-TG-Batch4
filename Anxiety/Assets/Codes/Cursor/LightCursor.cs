@@ -8,9 +8,9 @@ public class LightCursor : MonoBehaviour
     float x = 0f;
     float y = 0f;
     [SerializeField] float z = 40.5f;
-    [SerializeField] [Range(0.01f, 0.5f)] float zDiff = 0.1875f;
-    Vector3 mousePos = new Vector3(0f, 0f, 0f);
-    Vector3 worldPos = new Vector3(0f, 0f, 0f);
+    [SerializeField] [Range(0.01f, 0.5f)] readonly float zDiff = 0.1875f;
+    Vector3 mousePos = Vector3.zero;
+    Vector3 worldPos = Vector3.zero;
     [Header("Constraint")]
     public float leftXClamp = -169f;
     public float rightXClamp = -155f;

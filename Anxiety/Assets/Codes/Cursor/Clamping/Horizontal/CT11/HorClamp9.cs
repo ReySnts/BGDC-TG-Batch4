@@ -9,7 +9,7 @@ public class HorClamp9 : HorClamp
     {
         if (
             Fear.objInstance.hasDied && 
-            CheckPoint.checkPointName == "Moshrum (3)"
+            CheckPoint.objInstance.checkPointName == CheckPoint.objInstance.colliderName + " (3)"
         ) TurnOnLeftCursor();
     }
 }

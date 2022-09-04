@@ -5,7 +5,7 @@ public class Ending : StartLevel
     public static Ending objInstance = null;
     public Animator backgroundAnimControl = null;
     bool isTriggered = false;
-    string colliderName = "Player";
+    readonly string colliderName = "Player";
     void Awake()
     {
         if (objInstance == null && SceneManagement.GetCurrentScene() == 4) objInstance = this;
@@ -24,7 +24,7 @@ public class Ending : StartLevel
     IEnumerator HoldCredits()
     {
         yield return new WaitForSeconds(5f);
-        NextScene.objInstance.StartLoading("Level");
+        if (!NextScene.objInstance.hasStartedLoading) NextScene.objInstance.StartLoading("Level");
     }
     void OnTriggerEnter(Collider other)
     {

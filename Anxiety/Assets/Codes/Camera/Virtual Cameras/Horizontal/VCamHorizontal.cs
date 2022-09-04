@@ -7,15 +7,15 @@ public abstract class VCamHorizontal : MonoBehaviour
     public PlayableDirector playableDirector = null;
     public Cam2D cam2D = null;
     [Header("Values")]
-    public Vector2 xTrigger = new Vector2(0f, 0f);
-    [SerializeField] bool isTimelinePlayed = false;
-    public abstract void SetVCam();
-    void Awake()
+    public Vector2 xTrigger = Vector2.zero;
+    public bool isTimelinePlayed = false;
+    protected abstract void SetVCam();
+    protected void Awake()
     {
         cam2D = FindObjectOfType<Cam2D>();
         SetVCam();
     }
-    void Update()
+    protected void Update()
     {
         if (!isTimelinePlayed)
         {

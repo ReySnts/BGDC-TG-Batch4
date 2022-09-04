@@ -1,8 +1,10 @@
 using UnityEngine;
 public class VCam4Up : VCamVerticalUp
 {
-    public override float SetVCam()
+    protected override Vector2 SetVCam()
     {
-        return vCamVerticalDown.yTrigger = 26.5f;
+        yTriggerX = 26.5f;
+        yTriggerY = 40f;
+        return new Vector2(yTriggerX, yTriggerY);
     }
 }

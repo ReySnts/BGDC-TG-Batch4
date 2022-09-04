@@ -4565,6 +4565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb5a584910cd5340b31fab8fbd34581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCollided: 0
   isTriggered: 0
   dieAfterShockSound: {fileID: 1692342327}
 --- !u!64 &115954291
@@ -4726,6 +4727,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb5a584910cd5340b31fab8fbd34581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCollided: 0
   isTriggered: 0
   dieAfterShockSound: {fileID: 1692342327}
 --- !u!114 &115954307
@@ -4740,6 +4742,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb5a584910cd5340b31fab8fbd34581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCollided: 0
   isTriggered: 0
   dieAfterShockSound: {fileID: 1692342327}
 --- !u!114 &115954308
@@ -4754,6 +4757,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb5a584910cd5340b31fab8fbd34581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCollided: 0
   isTriggered: 0
   dieAfterShockSound: {fileID: 1692342327}
 --- !u!114 &115954309
@@ -4768,6 +4772,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb5a584910cd5340b31fab8fbd34581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCollided: 0
   isTriggered: 0
   dieAfterShockSound: {fileID: 1692342327}
 --- !u!114 &115954310
@@ -4782,6 +4787,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb5a584910cd5340b31fab8fbd34581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCollided: 0
   isTriggered: 0
   dieAfterShockSound: {fileID: 1692342327}
 --- !u!114 &115954311
@@ -4796,6 +4802,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb5a584910cd5340b31fab8fbd34581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCollided: 0
   isTriggered: 0
   dieAfterShockSound: {fileID: 1692342327}
 --- !u!114 &115954312
@@ -4810,6 +4817,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb5a584910cd5340b31fab8fbd34581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCollided: 0
   isTriggered: 0
   dieAfterShockSound: {fileID: 1692342327}
 --- !u!1001 &130287393
@@ -50132,6 +50140,7 @@ MonoBehaviour:
   dieSoundTimeline: {fileID: 734712855}
   shockSound: {fileID: 1692342327}
   playerMoveSounds: {fileID: 859348438}
+  player: {fileID: 1579503268}
   dieTraps:
   - {fileID: 115954290}
   - {fileID: 115954312}

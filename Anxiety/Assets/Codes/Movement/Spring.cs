@@ -3,7 +3,7 @@ public class Spring : MonoBehaviour
 {
     public Rigidbody playerBody = null;
     [SerializeField] bool triggered = false;
-    string colliderName = "Player";
+    readonly string colliderName = "Player";
     void OnTriggerEnter(Collider other)
     {
         if (!triggered && other.name == colliderName)

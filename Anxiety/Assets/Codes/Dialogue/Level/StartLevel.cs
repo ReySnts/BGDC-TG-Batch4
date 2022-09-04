@@ -10,7 +10,7 @@ public class StartLevel : MonoBehaviour
     int dialogueIdx = 0;
     protected float waitTime = 2f;
     [Header("Dialogue")]
-    Queue<string> dialogueStorage = new Queue<string>();
+    readonly Queue<string> dialogueStorage = new Queue<string>();
     protected bool endDialogue = false;
     [Header("Guideline")]
     protected Queue<string> guidelineStorage = new Queue<string>();
