@@ -1,8 +1,12 @@
 using UnityEngine;
 public abstract class Death : MonoBehaviour
 {
+<<<<<<< HEAD
     Fear fear = null;
     public AudioSource dieAfterJumpSound = null;
+=======
+    public bool isCollided = false;
+>>>>>>> programming
     public bool isTriggered = false;
     protected string colliderName = "Player";
     protected float restartTime = 0f;

@@ -3,15 +3,15 @@ using UnityEngine;
 using UnityEngine.Playables;
 public class Cam2D : MonoBehaviour
 {
-    int totalTransitions = 3;
-    int camIdx = 0;
-    public Transform player = null;
     [Header("References List")]
+    public Transform player = null;
     public List<PlayableDirector> playDirList = new List<PlayableDirector>();
     public List<VCamHorizontal> vCamHorList = new List<VCamHorizontal>();
-    [Header("Value Arrays")]
+    [Header("Values")]
     public Vector2[] xTriggers = null;
-    [SerializeField] bool[] isTimelinePlayed = null;
+    public bool[] isTimelinePlayed = null;
+    int totalTransitions = 3;
+    int camIdx = 0;
     void Start()
     {
         totalTransitions = vCamHorList.Count;

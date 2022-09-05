@@ -42,10 +42,19 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 velocity;
     void Start()
     {
+<<<<<<< HEAD
         rigidBody = this.GetComponent<Rigidbody>();
         playerControlAnim = this.GetComponentInChildren<Animator>();
         boxCol = this.GetComponent<BoxCollider>();
         capsCol = this.GetComponent<CapsuleCollider>();
+=======
+        rigidBody = GetComponent<Rigidbody>();
+        playerControlAnim = GetComponentInChildren<Animator>();
+        boxCol = GetComponent<BoxCollider>();
+        capsCol = GetComponent<CapsuleCollider>();
+        spriteRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+        SetCollider();
+>>>>>>> programming
     }
     void Walk()
     {
@@ -53,7 +62,11 @@ public class PlayerMovement : MonoBehaviour
         z = Input.GetAxis("Vertical");
         if (!isPressed && (x != 0f || z != 0f))
         {
-            walkSound.Play();
+            try
+            {
+                walkSound.Play();
+            }
+            catch { }
             isPressed = true;
         }
         else if (x == 0f && z == 0f)
@@ -86,9 +99,63 @@ public class PlayerMovement : MonoBehaviour
     }
     void SetBody()
     {
+<<<<<<< HEAD
         shadow.localScale = Vector3.one * 0.5f;
         boxCol.enabled = false;
         capsCol.enabled = true;
+=======
+        //shadow.localScale = new Vector3(1f, 0.5f, 1f);
+        rigidBody.velocity = new Vector3(x * walkSpeed * 0.5f, 0f, z * walkSpeed * 0.5f);
+        if (!isCrouch)
+        {
+            try
+            {
+                crouchSound.Play();
+            }
+            catch { }
+            isCrouch = true;
+        }
+        runSound.Stop();
+    }
+    void SetRun()
+    {
+        rigidBody.velocity = new Vector3(x * walkSpeed * 2f, 0f, z * walkSpeed * 2f);
+        if (!isRun && (x != 0f || z != 0f))
+        {
+            try
+            {
+                runSound.Play();
+            }
+            catch { }
+            isRun = true;
+        }
+        walkSound.Stop();
+    }
+    void StopRun()
+    {
+        runSound.Stop();
+        try
+        {
+            walkSound.Play();
+        }
+        catch { }
+        isRun = false;
+    }
+    void StopCrouch()
+    {
+        try
+        {
+            crouchSound.Play();
+        }
+        catch { }
+        isCrouch = false;
+    }
+    void SetNormal()
+    {
+        rigidBody.velocity = new Vector3(x * walkSpeed, 0f, z * walkSpeed);
+        if (isRun) StopRun();
+        if (isCrouch) StopCrouch();
+>>>>>>> programming
     }
     void SetMoveMode()
     {
@@ -146,6 +213,54 @@ public class PlayerMovement : MonoBehaviour
         playerControlAnim.SetFloat("ZWalkSpeed", Mathf.Abs(z * walkSpeed));
         playerControlAnim.SetBool("IsCrouching", isCrouch);
     }
+<<<<<<< HEAD
+=======
+    void StartToJump()
+    {
+        velocity.y = jumpForce;
+        if (
+            !Physics.Raycast(
+                head.transform.position,
+                head.transform.TransformDirection(Vector3.up),
+                0.2f,
+                groundMask
+            )
+        ) rigidBody.velocity += new Vector3(x * walkSpeed, velocity.y, 0f);
+        playerControlAnim.SetBool("IsJumping", true);
+        startJump = true;
+    }
+    void StartLandAfterJump()
+    {
+        try
+        {
+            jumpSound.Play();
+        }
+        catch { }
+        startJump = false;
+        startLand = true;
+    }
+    void SetGravity()
+    {
+        if (isGround) velocity.y = -2f;
+        if (
+            Physics.Raycast(
+                head.transform.position,
+                head.transform.TransformDirection(Vector3.up),
+                0.2f,
+                groundMask
+            )
+        ) velocity.y = -0.5f;
+        velocity.y += (gravity * Time.deltaTime);
+        rigidBody.velocity += new Vector3(x * walkSpeed, velocity.y, 0f);
+    }
+    void JumpingOnAir()
+    {
+        walkSound.Stop();
+        runSound.Stop();
+        crouchSound.Stop();
+        SetGravity();
+    }
+>>>>>>> programming
     void Jump()
     {
         if (isGround)
@@ -175,7 +290,11 @@ public class PlayerMovement : MonoBehaviour
     }
     public void Landing()
     {
-        landSound.Play();
+        try
+        {
+            landSound.Play();
+        }
+        catch { }
         playerControlAnim.SetBool("IsJumping", false);
         startLand = false;
     }

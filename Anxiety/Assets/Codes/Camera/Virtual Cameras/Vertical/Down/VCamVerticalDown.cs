@@ -1,21 +1,17 @@
-using UnityEngine;
-using UnityEngine.Playables;
-public class VCamVerticalDown : MonoBehaviour
+public abstract class VCamVerticalDown : VCamVertical
 {
-    [Header("References")]
-    public Transform player = null;
-    public PlayableDirector playableDirector = null;
     public VCamVerticalUp vCamVerticalUp = null;
-    [Header("Values")]
-    public float yTrigger = 0f;
-    public bool isTimelinePlayed = false;
-    void Update()
+    protected void Start()
+    {
+        enabled = false;
+    }
+    protected void Update()
     {
         if (!isTimelinePlayed)
         {
             playableDirector.time = 2f;
             vCamVerticalUp.enabled = false;
-            if (player.position.y < yTrigger)
+            if (player.position.y >= yTrigger.x && player.position.y < yTrigger.y)
             {
                 playableDirector.initialTime = 2.5f;
                 playableDirector.Play();

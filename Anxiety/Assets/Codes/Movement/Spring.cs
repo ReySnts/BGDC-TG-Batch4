@@ -7,6 +7,10 @@ public class Spring : MonoBehaviour
     [Header("Values")]
     [SerializeField] float initForce = 7.5f;
     [SerializeField] bool triggered = false;
+<<<<<<< HEAD
+=======
+    readonly string colliderName = "Player";
+>>>>>>> programming
     void OnTriggerEnter(Collider other)
     {
         if (!triggered && other.name == "Player")
