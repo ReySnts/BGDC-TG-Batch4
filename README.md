@@ -1,7 +1,7 @@
 
 # Alone in the Dark v1.0.1
 
-Sebuah gim horor 2,5D bergenre *platformer* di mana Anda (sebagai *The Light*) harus menuntun *The Little Guy* keluar dengan selamat dari sebuah **kastil yang menyeramkan**.
+Sebuah gim horor 2,5D bergenre *platformer* di mana Anda (sebagai *The Light*) harus menuntun *The Little Guy* agar keluar dengan selamat dari sebuah **kastil yang menyeramkan**.
 
 
 ![Logo](https://img.itch.zone/aW1nLzk4OTIyNzQucG5n/315x250%23c/Eg%2F9Mf.png)
