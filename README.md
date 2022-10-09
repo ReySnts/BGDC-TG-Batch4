@@ -12,7 +12,7 @@ Sebuah gim horor 2,5D bergenre *platformer* di mana Anda (sebagai *The Light*) h
 - *Unique Health System*
 - *Quick Time Event*
 - *Confirmation Page*
-- *Bonus (Concept Art)*
+- Bonus (*Concept Art*)
 
 
 ## 🛠 Keterampilan
